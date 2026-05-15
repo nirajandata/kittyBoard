@@ -1,11 +1,11 @@
-#  Kiraboard
+#  KittyBoard
 
 A fully customizable **Qt 6.11 + QML-based virtual keyboard engine** with theme-driven UI, modular key components, and JSON-based styling system.
 
 
 ##  Overview
 
-Kiraboard is a lightweight virtual keyboard prototype built using **Qt Quick (QML)** and **C++ backend**.
+KittyBoard is a lightweight virtual keyboard prototype built using **Qt Quick (QML)** and **C++ backend**.
 
 
 
