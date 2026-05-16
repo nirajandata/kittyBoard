@@ -1,0 +1,29 @@
+{
+  "visual": {
+    "keyColor": "#2b2b2b",
+    "keyPressedColor": "#3a3a3a",
+    "textColor": "#ffffff",
+    "borderColor": "#33ffffff",
+    "radius": 18,
+    "pressScale": 0.93,
+    "hoverOpacity": 0.08,
+    "background": "#121212"
+  },
+
+  "layout": {
+    "rowSpacing": 12,
+    "keySpacing": 8,
+    "keyHeight": 72,
+    "keyWidth": 72
+  },
+
+  "behavior": {
+    "pressAnimationMs": 60,
+    "longPressMs": 450
+  },
+
+  "features": {
+    "enableShadow": true,
+    "enableHover": true
+  }
+}
