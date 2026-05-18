@@ -1,25 +1,33 @@
 import QtQuick
 import QtQuick.Window
-import QtQuick.Controls
 
 Window {
+    id: mainWindow
+
+    // Width/height are managed by layer-shell anchors in main.cpp.
+    // These are just fallback values.
     width: 900
-    height: 500
-    visible: true
+    height: 400
+    visible: false  // main.cpp shows it after layer-shell is configured
     title: "Kittyboard"
+
+    // No special focus flags needed here — layer-shell in main.cpp
+    // handles all of that at the Wayland protocol level.
+    // Qt.FramelessWindowHint is still fine for aesthetics.
+    flags: Qt.FramelessWindowHint
 
     property var t: ({})
 
     Connections {
         target: ThemeManager
         function onThemeChanged() {
-            t = ThemeManager.theme
+            t = ThemeManager.theme;
         }
     }
 
     Component.onCompleted: {
         if (ThemeManager.theme && Object.keys(ThemeManager.theme).length > 0) {
-            t = ThemeManager.theme
+            t = ThemeManager.theme;
         }
     }
 
@@ -29,128 +37,68 @@ Window {
     }
 
     Column {
-        anchors.fill: parent
-        anchors.margins: 20
-        spacing: 20
+        anchors.centerIn: parent
+        spacing: t.layout?.rowSpacing ?? 12
 
-        // Text input area (display only, no focus)
-        Rectangle {
-            width: parent.width
-            height: 80
-            color: t.visual?.keyColor ?? "#2b2b2b"
-            radius: t.visual?.radius ?? 18
-            border.color: t.visual?.borderColor ?? "#33ffffff"
-            border.width: 2
-
-            Text {
-                id: displayText
-                anchors.fill: parent
-                anchors.margins: 15
-                verticalAlignment: Text.AlignVCenter
-                color: t.visual?.textColor ?? "#ffffff"
-                font.pixelSize: 24
-                font.bold: false
-                text: "Type on your keyboard or click buttons"
-                opacity: 0.6
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: t.layout?.keySpacing ?? 8
+            Repeater {
+                model: ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
+                KeyButton {
+                    label: modelData
+                }
             }
         }
 
-        // Keyboard
-        Column {
-            id: keyboard
+        Row {
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: t.layout?.rowSpacing ?? 12
-
-            Row {
-                spacing: t.layout?.keySpacing ?? 8
-
-                Repeater {
-                    model: ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
-
-                    KeyButton {
-                        label: modelData
-
-                        onKeyPressed: function (key) {
-                            KeyboardSimulator.focusOnActiveWindow()
-                            KeyboardSimulator.sendKey(key)
-                        }
-                    }
+            spacing: t.layout?.keySpacing ?? 8
+            Repeater {
+                model: ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
+                KeyButton {
+                    label: modelData
                 }
             }
+        }
 
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: t.layout?.keySpacing ?? 8
-
-                Repeater {
-                    model: ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
-
-                    KeyButton {
-                        label: modelData
-
-                        onKeyPressed: function (key) {
-                            KeyboardSimulator.focusOnActiveWindow()
-                            KeyboardSimulator.sendKey(key)
-                        }
-                    }
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: t.layout?.keySpacing ?? 8
+            Repeater {
+                model: ["Z", "X", "C", "V", "B", "N", "M"]
+                KeyButton {
+                    label: modelData
                 }
             }
+        }
 
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: t.layout?.keySpacing ?? 8
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: t.layout?.keySpacing ?? 8
 
-                Repeater {
-                    model: ["Z", "X", "C", "V", "B", "N", "M"]
-
-                    KeyButton {
-                        label: modelData
-
-                        onKeyPressed: function (key) {
-                            KeyboardSimulator.focusOnActiveWindow()
-                            KeyboardSimulator.sendKey(key)
-                        }
-                    }
-                }
+            KeyButton {
+                label: "Space"
+                width: 300
+                height: t.layout?.keyHeight ?? 72
+                autoSend: false
+                onKeyPressed: KeyboardSimulator.sendSpace()
             }
 
-            // Spacebar and backspace
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: t.layout?.keySpacing ?? 8
+            KeyButton {
+                label: "←"
+                width: t.layout?.keyWidth ?? 72
+                height: t.layout?.keyHeight ?? 72
+                autoSend: false
+                onKeyPressed: KeyboardSimulator.sendBackspace()
+            }
 
-                KeyButton {
-                    label: "Space"
-                    width: 300
-                    height: t.layout?.keyHeight ?? 72
-
-                    onKeyPressed: {
-                        KeyboardSimulator.focusOnActiveWindow()
-                        KeyboardSimulator.sendSpace()
-                    }
-                }
-
-                KeyButton {
-                    label: "←"
-                    width: t.layout?.keyWidth ?? 72
-                    height: t.layout?.keyHeight ?? 72
-
-                    onKeyPressed: {
-                        KeyboardSimulator.focusOnActiveWindow()
-                        KeyboardSimulator.sendBackspace()
-                    }
-                }
-
-                KeyButton {
-                    label: "Enter"
-                    width: 150
-                    height: t.layout?.keyHeight ?? 72
-
-                    onKeyPressed: {
-                        KeyboardSimulator.focusOnActiveWindow()
-                        KeyboardSimulator.sendEnter()
-                    }
-                }
+            KeyButton {
+                label: "Enter"
+                width: 150
+                height: t.layout?.keyHeight ?? 72
+                autoSend: false
+                onKeyPressed: KeyboardSimulator.sendEnter()
             }
         }
     }

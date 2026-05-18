@@ -37,6 +37,9 @@ target_link_libraries(appKittyboard
     PRIVATE Qt6::Quick
 )
 
+find_package(LayerShellQt REQUIRED)
+target_link_libraries(appKittyboard PRIVATE LayerShellQt::Interface)
+
 install(TARGETS appKittyboard
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
