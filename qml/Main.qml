@@ -21,7 +21,6 @@ Window {
         if (ThemeManager.theme && Object.keys(ThemeManager.theme).length > 0) {
             t = ThemeManager.theme
         }
-        textInput.focus = true
     }
 
     Rectangle {
@@ -34,7 +33,7 @@ Window {
         anchors.margins: 20
         spacing: 20
 
-        // Text input area
+        // Text input area (display only, no focus)
         Rectangle {
             width: parent.width
             height: 80
@@ -43,27 +42,16 @@ Window {
             border.color: t.visual?.borderColor ?? "#33ffffff"
             border.width: 2
 
-            TextInput {
-                id: textInput
+            Text {
+                id: displayText
                 anchors.fill: parent
                 anchors.margins: 15
                 verticalAlignment: Text.AlignVCenter
                 color: t.visual?.textColor ?? "#ffffff"
                 font.pixelSize: 24
                 font.bold: false
-                selectByMouse: true
-                cursorVisible: true
-                focus: true
-
-                Keys.onPressed: function(event) {
-                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                        KeyboardSimulator.sendEnter()
-                        event.accepted = true
-                    } else if (event.key === Qt.Key_Backspace) {
-                        KeyboardSimulator.sendBackspace()
-                        event.accepted = true
-                    }
-                }
+                text: "Type on your keyboard or click buttons"
+                opacity: 0.6
             }
         }
 
@@ -84,7 +72,6 @@ Window {
 
                         onKeyPressed: function (key) {
                             KeyboardSimulator.sendKey(key)
-                            textInput.insert(textInput.cursorPosition, key)
                         }
                     }
                 }
@@ -102,7 +89,6 @@ Window {
 
                         onKeyPressed: function (key) {
                             KeyboardSimulator.sendKey(key)
-                            textInput.insert(textInput.cursorPosition, key)
                         }
                     }
                 }
@@ -120,7 +106,6 @@ Window {
 
                         onKeyPressed: function (key) {
                             KeyboardSimulator.sendKey(key)
-                            textInput.insert(textInput.cursorPosition, key)
                         }
                     }
                 }
@@ -138,7 +123,6 @@ Window {
 
                     onKeyPressed: {
                         KeyboardSimulator.sendSpace()
-                        textInput.insert(textInput.cursorPosition, " ")
                     }
                 }
 
@@ -149,19 +133,16 @@ Window {
 
                     onKeyPressed: {
                         KeyboardSimulator.sendBackspace()
-                        if (textInput.cursorPosition > 0) {
-                            textInput.remove(textInput.cursorPosition - 1, textInput.cursorPosition)
-                        }
                     }
                 }
 
                 KeyButton {
-                    label: "Clear"
+                    label: "Enter"
                     width: 150
                     height: t.layout?.keyHeight ?? 72
 
                     onKeyPressed: {
-                        textInput.clear()
+                        KeyboardSimulator.sendEnter()
                     }
                 }
             }
