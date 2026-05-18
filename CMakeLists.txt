@@ -10,6 +10,8 @@ qt_standard_project_setup(REQUIRES 6.10)
 
 qt_add_executable(appKittyboard
     src/main.cpp
+    src/KeyboardSimulator.cpp
+    src/KeyboardSimulator.h
 )
 
 qt_add_qml_module(appKittyboard
@@ -17,9 +19,13 @@ qt_add_qml_module(appKittyboard
     QML_FILES
         qml/Main.qml
         qml/KeyButton.qml
-        SOURCES src/ThemeManager.cpp
-        SOURCES src/ThemeManager.h
+    SOURCES 
+        src/ThemeManager.cpp
+        src/ThemeManager.h
+    RESOURCE_PREFIX /
+    RESOURCES
         themes/dark.json
+        themes/neon.json
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -40,5 +46,5 @@ target_link_libraries(appKittyboard
 install(TARGETS appKittyboard
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
