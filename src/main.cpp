@@ -6,6 +6,7 @@
 #include <QDir>
 
 #include "ThemeManager.h"
+#include "KeyboardSimulator.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,19 +15,14 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     ThemeManager themeManager;
+    KeyboardSimulator keyboardSimulator;
 
+    engine.rootContext()->setContextProperty("ThemeManager", &themeManager);
+    engine.rootContext()->setContextProperty("KeyboardSimulator", &keyboardSimulator);
 
-    engine.rootContext()->setContextProperty(
-        "ThemeManager",
-        &themeManager
-        );
+    themeManager.loadTheme("qrc:/Kittyboard/themes/dark.json");
 
-
-    themeManager.loadTheme("Kittyboard/themes/dark.json");
-
-     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/Kittyboard/qml/Main.qml")));
-    qDebug() << "App dir:" << QCoreApplication::applicationDirPath();
-    qDebug() << "Exists:" << QFile::exists("Kittyboard/themes/dark.json");
+    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/Kittyboard/qml/Main.qml")));
 
     if (engine.rootObjects().isEmpty()) {
         qDebug() << "QML failed to load";
