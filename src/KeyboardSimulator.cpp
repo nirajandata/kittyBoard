@@ -4,10 +4,13 @@
 #include <QMap>
 
 KeyboardSimulator::KeyboardSimulator(QObject *parent)
-    : QObject(parent) {}
+    : QObject(parent), m_lastFocusedWindow(0) {}
 
 void KeyboardSimulator::sendKey(const QString &key)
 {
+    // Store focused window before sending key
+    storeFocusedWindow();
+
     // Map characters to xdotool key names
     static QMap<QString, QString> keyMap = {
         {"a", "a"}, {"b", "b"}, {"c", "c"}, {"d", "d"}, {"e", "e"},
@@ -34,6 +37,9 @@ void KeyboardSimulator::sendKey(const QString &key)
     process.start("xdotool", QStringList() << "key" << keyName);
     process.waitForFinished();
 
+    // Restore focus to the previous window
+    restoreFocusedWindow();
+
     if (process.exitCode() != 0) {
         qWarning() << "xdotool error:" << process.readAllStandardError();
     }
@@ -41,21 +47,60 @@ void KeyboardSimulator::sendKey(const QString &key)
 
 void KeyboardSimulator::sendBackspace()
 {
+    storeFocusedWindow();
+
     QProcess process;
     process.start("xdotool", QStringList() << "key" << "BackSpace");
     process.waitForFinished();
+
+    restoreFocusedWindow();
 }
 
 void KeyboardSimulator::sendSpace()
 {
+    storeFocusedWindow();
+
     QProcess process;
     process.start("xdotool", QStringList() << "key" << "space");
     process.waitForFinished();
+
+    restoreFocusedWindow();
 }
 
 void KeyboardSimulator::sendEnter()
 {
+    storeFocusedWindow();
+
     QProcess process;
     process.start("xdotool", QStringList() << "key" << "Return");
+    process.waitForFinished();
+
+    restoreFocusedWindow();
+}
+
+void KeyboardSimulator::storeFocusedWindow()
+{
+    QProcess process;
+    process.start("xdotool", QStringList() << "getactivewindow");
+    process.waitForFinished();
+
+    QString output = process.readAllStandardOutput().trimmed();
+    bool ok;
+    m_lastFocusedWindow = output.toLongLong(&ok);
+    
+    if (!ok) {
+        qWarning() << "Failed to get active window ID";
+        m_lastFocusedWindow = 0;
+    }
+}
+
+void KeyboardSimulator::restoreFocusedWindow()
+{
+    if (m_lastFocusedWindow <= 0) {
+        return;
+    }
+
+    QProcess process;
+    process.start("xdotool", QStringList() << "windowactivate" << QString::number(m_lastFocusedWindow));
     process.waitForFinished();
 }
