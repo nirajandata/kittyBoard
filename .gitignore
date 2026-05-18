@@ -79,3 +79,10 @@ CMakeLists.txt.user*
 .uic/
 /build*/
 /.qtcreator/
+
+# Ignore everything inside the themes directory...
+themes/*
+
+# ...except for the .json files
+!themes/*.json
+
