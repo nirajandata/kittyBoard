@@ -2,16 +2,15 @@
 #include <QProcess>
 #include <QDebug>
 #include <QMap>
+#include <QThread>
 
 KeyboardSimulator::KeyboardSimulator(QObject *parent)
     : QObject(parent), m_lastFocusedWindow(0) {}
 
 void KeyboardSimulator::sendKey(const QString &key)
 {
-    // Store focused window before sending key
     storeFocusedWindow();
 
-    // Map characters to xdotool key names
     static QMap<QString, QString> keyMap = {
         {"a", "a"}, {"b", "b"}, {"c", "c"}, {"d", "d"}, {"e", "e"},
         {"f", "f"}, {"g", "g"}, {"h", "h"}, {"i", "i"}, {"j", "j"},
@@ -31,13 +30,13 @@ void KeyboardSimulator::sendKey(const QString &key)
         {" ", "space"},
     };
 
-    QString keyName = keyMap.value(key.toLower(), key.toLower());
+    QString keyName = keyMap.value(key, key.toLower());
     
     QProcess process;
     process.start("xdotool", QStringList() << "key" << keyName);
     process.waitForFinished();
 
-    // Restore focus to the previous window
+    QThread::msleep(50);
     restoreFocusedWindow();
 
     if (process.exitCode() != 0) {
@@ -53,6 +52,7 @@ void KeyboardSimulator::sendBackspace()
     process.start("xdotool", QStringList() << "key" << "BackSpace");
     process.waitForFinished();
 
+    QThread::msleep(50);
     restoreFocusedWindow();
 }
 
@@ -64,6 +64,7 @@ void KeyboardSimulator::sendSpace()
     process.start("xdotool", QStringList() << "key" << "space");
     process.waitForFinished();
 
+    QThread::msleep(50);
     restoreFocusedWindow();
 }
 
@@ -75,6 +76,12 @@ void KeyboardSimulator::sendEnter()
     process.start("xdotool", QStringList() << "key" << "Return");
     process.waitForFinished();
 
+    QThread::msleep(50);
+    restoreFocusedWindow();
+}
+
+void KeyboardSimulator::focusOnActiveWindow()
+{
     restoreFocusedWindow();
 }
 
