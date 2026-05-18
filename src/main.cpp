@@ -21,36 +21,31 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("ThemeManager", &themeManager);
     engine.rootContext()->setContextProperty("KeyboardSimulator", &keyboardSimulator);
 
-    themeManager.loadTheme("qrc:/Kittyboard/themes/dark.json");
+    themeManager.loadTheme("Kittyboard/themes/dark.json");
 
-    // Connect BEFORE engine.load() so we catch the window the moment it's
-    // created but before it's shown — this is the only safe time to attach
-    // a different shell integration on Wayland.
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated,
         &app, [&](QObject *obj, const QUrl &) {
             QQuickWindow *window = qobject_cast<QQuickWindow *>(obj);
             if (!window) return;
 
-            // Configure layer-shell before the window is shown.
-            // Window must be hidden at this point (set visible: false in QML).
             auto *layerWindow = LayerShellQt::Window::get(window);
 
-            layerWindow->setLayer(LayerShellQt::Window::LayerTop);
+            // Overlay layer floats above all normal windows
+            layerWindow->setLayer(LayerShellQt::Window::LayerOverlay);
+
+            // No keyboard interactivity — never steals focus
             layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
 
-            LayerShellQt::Window::Anchors anchors;
-            anchors.setFlag(LayerShellQt::Window::AnchorBottom);
-            anchors.setFlag(LayerShellQt::Window::AnchorLeft);
-            anchors.setFlag(LayerShellQt::Window::AnchorRight);
-            layerWindow->setAnchors(anchors);
+            // No anchors = free floating, compositor places it at 0,0 initially
+            layerWindow->setAnchors({});
 
-            layerWindow->setExclusiveZone(400);
+            // No exclusive zone = doesn't push other windows away
+            layerWindow->setExclusiveZone(0);
 
             keyboardSimulator.setOwnWindowId(window->winId());
-            qDebug() << "[main] Layer-shell configured, showing window";
+            qDebug() << "[main] Layer-shell configured (floating)";
 
-            // Now safe to show
             window->show();
         },
         Qt::QueuedConnection
