@@ -71,6 +71,7 @@ Window {
                         label: modelData
 
                         onKeyPressed: function (key) {
+                            KeyboardSimulator.focusOnActiveWindow()
                             KeyboardSimulator.sendKey(key)
                         }
                     }
@@ -88,6 +89,7 @@ Window {
                         label: modelData
 
                         onKeyPressed: function (key) {
+                            KeyboardSimulator.focusOnActiveWindow()
                             KeyboardSimulator.sendKey(key)
                         }
                     }
@@ -105,6 +107,7 @@ Window {
                         label: modelData
 
                         onKeyPressed: function (key) {
+                            KeyboardSimulator.focusOnActiveWindow()
                             KeyboardSimulator.sendKey(key)
                         }
                     }
@@ -122,6 +125,7 @@ Window {
                     height: t.layout?.keyHeight ?? 72
 
                     onKeyPressed: {
+                        KeyboardSimulator.focusOnActiveWindow()
                         KeyboardSimulator.sendSpace()
                     }
                 }
@@ -132,6 +136,7 @@ Window {
                     height: t.layout?.keyHeight ?? 72
 
                     onKeyPressed: {
+                        KeyboardSimulator.focusOnActiveWindow()
                         KeyboardSimulator.sendBackspace()
                     }
                 }
@@ -142,6 +147,7 @@ Window {
                     height: t.layout?.keyHeight ?? 72
 
                     onKeyPressed: {
+                        KeyboardSimulator.focusOnActiveWindow()
                         KeyboardSimulator.sendEnter()
                     }
                 }
