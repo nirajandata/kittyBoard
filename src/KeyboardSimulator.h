@@ -13,6 +13,7 @@ public:
     Q_INVOKABLE void sendBackspace();
     Q_INVOKABLE void sendSpace();
     Q_INVOKABLE void sendEnter();
+    Q_INVOKABLE void focusOnActiveWindow();
 
 private:
     void storeFocusedWindow();
