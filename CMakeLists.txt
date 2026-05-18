@@ -12,6 +12,8 @@ qt_add_executable(appKittyboard
     src/main.cpp
     src/KeyboardSimulator.cpp
     src/KeyboardSimulator.h
+    src/ThemeManager.cpp
+    src/ThemeManager.h
 )
 
 qt_add_qml_module(appKittyboard
@@ -19,21 +21,12 @@ qt_add_qml_module(appKittyboard
     QML_FILES
         qml/Main.qml
         qml/KeyButton.qml
-    SOURCES 
-        src/ThemeManager.cpp
-        src/ThemeManager.h
-        src/KeyboardSimulator.cpp
-        src/KeyboardSimulator.h
     RESOURCES
         themes/dark.json
         themes/neon.json
 )
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
 set_target_properties(appKittyboard PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appKittyboard
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
