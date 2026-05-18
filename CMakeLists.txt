@@ -22,7 +22,8 @@ qt_add_qml_module(appKittyboard
     SOURCES 
         src/ThemeManager.cpp
         src/ThemeManager.h
-    RESOURCE_PREFIX /
+        src/KeyboardSimulator.cpp
+        src/KeyboardSimulator.h
     RESOURCES
         themes/dark.json
         themes/neon.json
