@@ -1,0 +1,34 @@
+{
+  "visual": {
+    "background": "#0a0e27",
+    "backgroundImage": "",
+    "backgroundImageOpacity": 0.3,
+    "keyColor": "#1a1f3a",
+    "keyPressedColor": "#0f1425",
+    "specialKeyColor": "#2a1f3a",
+    "modkeyColor": "#1a2a3a",
+    "spacebarColor": "#0f0f1f",
+    "kittyKeyColor": "#3a1f4a",
+    "textColor": "#00ff88",
+    "hoverOpacity": 0.15,
+    "radius": 16
+  },
+  "layout": {
+    "keyWidth": 72,
+    "keyHeight": 72,
+    "keySpacing": 8,
+    "rowSpacing": 8
+  },
+  "behavior": {
+    "pressAnimationMs": 80,
+    "hoverAnimationMs": 150
+  },
+  "effects": {
+    "glareEnabled": true,
+    "glareColor": "#00ffff",
+    "glareIntensity": 0.8,
+    "shadowEnabled": true,
+    "shadowColor": "#000000",
+    "shadowOpacity": 0.4
+  }
+}

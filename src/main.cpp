@@ -14,19 +14,19 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     ThemeManager themeManager;
-    // generate something
 
 
-    // expose FIRST
     engine.rootContext()->setContextProperty(
         "ThemeManager",
         &themeManager
         );
 
 
-    themeManager.loadTheme("Kiraboard/themes/dark.json");
+    themeManager.loadTheme("Kittyboard/themes/dark.json");
 
-     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/Kittyboard/Main.qml")));
+     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/Kittyboard/qml/Main.qml")));
+    qDebug() << "App dir:" << QCoreApplication::applicationDirPath();
+    qDebug() << "Exists:" << QFile::exists("Kittyboard/themes/dark.json");
 
     if (engine.rootObjects().isEmpty()) {
         qDebug() << "QML failed to load";

@@ -15,7 +15,6 @@ Item {
     width: t.layout?.keyWidth ?? 72
     height: t.layout?.keyHeight ?? 72
 
-    // SHADOW
     Rectangle {
         anchors.centerIn: parent
         width: parent.width * 0.95
@@ -27,7 +26,6 @@ Item {
         y: root.pressed ? 2 : 6
     }
 
-    // KEY BODY
     Rectangle {
         id: base
         anchors.fill: parent
@@ -44,13 +42,11 @@ Item {
             NumberAnimation { duration: t.behavior?.pressAnimationMs ?? 60 }
         }
 
-        // gradient feel
         gradient: Gradient {
             GradientStop { position: 0.0; color: Qt.lighter(base.color, 1.2) }
             GradientStop { position: 1.0; color: Qt.darker(base.color, 1.3) }
         }
 
-        // hover
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
@@ -58,7 +54,6 @@ Item {
             opacity: root.hovered ? (t.visual?.hoverOpacity ?? 0.08) : 0.0
         }
 
-        // text
         Text {
             anchors.centerIn: parent
             text: root.label

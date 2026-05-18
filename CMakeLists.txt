@@ -9,16 +9,17 @@ find_package(Qt6 REQUIRED COMPONENTS Quick)
 qt_standard_project_setup(REQUIRES 6.10)
 
 qt_add_executable(appKittyboard
-    main.cpp
+    src/main.cpp
 )
 
 qt_add_qml_module(appKittyboard
     URI Kittyboard
     QML_FILES
-        Main.qml
-        KeyButton.qml
-        SOURCES ThemeManager.cpp
-        SOURCES ThemeManager.h
+        qml/Main.qml
+        qml/KeyButton.qml
+        SOURCES src/ThemeManager.cpp
+        SOURCES src/ThemeManager.h
+        themes/dark.json
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
