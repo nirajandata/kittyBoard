@@ -15,5 +15,8 @@ public:
     Q_INVOKABLE void sendEnter();
 
 private:
-    void sendKeyEvent(int keyCode, bool shift = false);
+    void storeFocusedWindow();
+    void restoreFocusedWindow();
+    
+    long long m_lastFocusedWindow;
 };
