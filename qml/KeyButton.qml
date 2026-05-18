@@ -5,10 +5,12 @@ Item {
 
     property var t: ThemeManager ? ThemeManager.theme : {}
     property string label: "A"
-
-    // Set to false for Space/Backspace/Enter — Main.qml handles their
-    // send call via onKeyPressed. For letter/number keys this stays true.
     property bool autoSend: true
+
+    property bool isCapsLock: false
+    property bool isCapsActive: false
+    property bool isAlpha: label.length === 1 && label.match(/[a-z]/i)
+    property string displayText: isAlpha ? (isCapsLock ? label.toUpperCase() : label.toLowerCase()) : label
 
     signal keyPressed(string key)
 
@@ -18,7 +20,6 @@ Item {
     width: t.layout?.keyWidth ?? 72
     height: t.layout?.keyHeight ?? 72
 
-    // Shadow
     Rectangle {
         anchors.centerIn: parent
         width: parent.width * 0.95
@@ -33,7 +34,7 @@ Item {
         id: base
         anchors.fill: parent
         radius: t.visual?.radius ?? 18
-        color: root.pressed ? (t.visual?.keyPressedColor ?? "#3a3a3a") : (t.visual?.keyColor ?? "#2b2b2b")
+        color: (root.pressed || root.isCapsActive) ? (t.visual?.keyPressedColor ?? "#3a3a3a") : (t.visual?.keyColor ?? "#2b2b2b")
         y: root.pressed ? 2 : 0
 
         Behavior on y {
@@ -43,14 +44,8 @@ Item {
         }
 
         gradient: Gradient {
-            GradientStop {
-                position: 0.0
-                color: Qt.lighter(base.color, 1.2)
-            }
-            GradientStop {
-                position: 1.0
-                color: Qt.darker(base.color, 1.3)
-            }
+            GradientStop { position: 0.0; color: Qt.lighter(base.color, 1.2) }
+            GradientStop { position: 1.0; color: Qt.darker(base.color, 1.3) }
         }
 
         Rectangle {
@@ -62,7 +57,7 @@ Item {
 
         Text {
             anchors.centerIn: parent
-            text: root.label
+            text: root.displayText
             color: t.visual?.textColor ?? "white"
             font.pixelSize: 22
             font.bold: true
@@ -75,14 +70,14 @@ Item {
 
         onEntered: root.hovered = true
         onExited: root.hovered = false
-
         onPressed: root.pressed = true
 
         onReleased: {
             root.pressed = false;
-            if (root.autoSend)
-                KeyboardSimulator.sendKey(root.label);
-            root.keyPressed(root.label);
+            if (root.autoSend) {
+                KeyboardSimulator.sendKey(root.displayText);
+            }
+            root.keyPressed(root.displayText);
         }
     }
 }

@@ -5,11 +5,12 @@ Window {
     id: mainWindow
     width: 900
     height: 420
-    visible: false  // main.cpp shows it after layer-shell is configured
+    visible: false
     title: "Kittyboard"
     flags: Qt.FramelessWindowHint
 
     property var t: ({})
+    property bool capsLock: false
 
     Connections {
         target: ThemeManager
@@ -19,17 +20,16 @@ Window {
     }
 
     Component.onCompleted: {
-        if (ThemeManager.theme && Object.keys(ThemeManager.theme).length > 0)
+        if (ThemeManager.theme && Object.keys(ThemeManager.theme).length > 0) {
             t = ThemeManager.theme;
+        }
     }
 
-    // Root background
     Rectangle {
         anchors.fill: parent
         color: t.visual?.background ?? "#121212"
         radius: t.visual?.radius ?? 18
 
-        // ── Drag handle ──────────────────────────────────────────────────
         Rectangle {
             id: dragHandle
             anchors.top: parent.top
@@ -38,7 +38,6 @@ Window {
             height: 32
             color: "transparent"
 
-            // Grip dots (centred, stays clear of the close button)
             Row {
                 anchors.centerIn: parent
                 spacing: 5
@@ -54,7 +53,6 @@ Window {
                 }
             }
 
-            // Close button — top-right corner
             Rectangle {
                 id: closeBtn
                 anchors.right: parent.right
@@ -87,7 +85,6 @@ Window {
                 }
             }
 
-            // Drag area — leave room on the right for the close button
             MouseArea {
                 anchors.left: parent.left
                 anchors.right: closeBtn.left
@@ -112,7 +109,6 @@ Window {
             }
         }
 
-        // ── Keys ─────────────────────────────────────────────────────────
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: dragHandle.bottom
@@ -126,6 +122,7 @@ Window {
                     model: ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
                     KeyButton {
                         label: modelData
+                        isCapsLock: mainWindow.capsLock
                     }
                 }
             }
@@ -133,10 +130,20 @@ Window {
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: t.layout?.keySpacing ?? 8
+
+                KeyButton {
+                    label: "Caps"
+                    width: 100
+                    autoSend: false
+                    isCapsActive: mainWindow.capsLock
+                    onKeyPressed: mainWindow.capsLock = !mainWindow.capsLock
+                }
+
                 Repeater {
                     model: ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
                     KeyButton {
                         label: modelData
+                        isCapsLock: mainWindow.capsLock
                     }
                 }
             }
@@ -148,6 +155,7 @@ Window {
                     model: ["Z", "X", "C", "V", "B", "N", "M"]
                     KeyButton {
                         label: modelData
+                        isCapsLock: mainWindow.capsLock
                     }
                 }
             }
