@@ -13,7 +13,7 @@ qt_add_executable(appKittyboard
     src/KeyboardSimulator.cpp
     src/KeyboardSimulator.h
     src/ThemeManager.cpp
-    src/ThemeManager.h
+
 )
 
 qt_add_qml_module(appKittyboard
@@ -24,6 +24,7 @@ qt_add_qml_module(appKittyboard
     RESOURCES
         themes/dark.json
         themes/neon.json
+        SOURCES src/ThemeManager.h
 )
 
 set_target_properties(appKittyboard PROPERTIES

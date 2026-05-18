@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QMargins>
 
 #include <LayerShellQt/Window>
 
@@ -29,8 +30,15 @@ int main(int argc, char *argv[]) {
             auto *layerWindow = LayerShellQt::Window::get(window);
             layerWindow->setLayer(LayerShellQt::Window::LayerOverlay);
             layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
-            layerWindow->setAnchors({});
+
+            layerWindow->setAnchors(LayerShellQt::Window::Anchors(LayerShellQt::Window::AnchorLeft | LayerShellQt::Window::AnchorTop));
             layerWindow->setExclusiveZone(0);
+
+            QObject::connect(&keyboardSimulator, &KeyboardSimulator::moveWindowRequested,
+                             window, [layerWindow, window](int x, int y) {
+                                 layerWindow->setMargins(QMargins(x, y, 0, 0));
+                                 window->update();
+                             });
 
             keyboardSimulator.setOwnWindowId(window->winId());
             window->show();

@@ -2,6 +2,7 @@
 #include <QProcess>
 #include <QProcessEnvironment>
 #include <QHash>
+#include <QCursor>
 #include <unistd.h>
 
 static const QHash<QString, int> keyCodeMap = {
@@ -25,6 +26,14 @@ void KeyboardSimulator::setOwnWindowId(long long winId) {
     m_ownWindowId = winId;
 }
 
+
+void KeyboardSimulator::moveWindow(int x, int y) {
+    emit moveWindowRequested(x, y);
+}
+
+QPoint KeyboardSimulator::globalMouse() const {
+    return QCursor::pos();
+}
 
 void KeyboardSimulator::runYdotool(const QStringList &args) {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();

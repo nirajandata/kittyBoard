@@ -9,6 +9,9 @@ Window {
     title: "Kittyboard"
     flags: Qt.FramelessWindowHint
 
+    property real appX: 100
+    property real appY: 100
+
     property var t: ({})
     property bool capsLock: false
 
@@ -23,6 +26,7 @@ Window {
         if (ThemeManager.theme && Object.keys(ThemeManager.theme).length > 0) {
             t = ThemeManager.theme;
         }
+        KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
     }
 
     Rectangle {
@@ -92,19 +96,52 @@ Window {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 cursorShape: Qt.SizeAllCursor
-                property point startPos
+
+                property point startGlobalPos
+                property real startAppX
+                property real startAppY
+
+                property real startX
+                property real startY
 
                 onPressed: mouse => {
-                    startPos = Qt.point(mouse.screenX, mouse.screenY);
+                    startGlobalPos = KeyboardSimulator.globalMouse();
+                    startAppX = mainWindow.appX;
+                    startAppY = mainWindow.appY;
+
+                    startX = mouse.x;
+                    startY = mouse.y;
                 }
+
                 onPositionChanged: mouse => {
                     if (!pressed)
                         return;
-                    let dx = mouse.screenX - startPos.x;
-                    let dy = mouse.screenY - startPos.y;
-                    mainWindow.x += dx;
-                    mainWindow.y += dy;
-                    startPos = Qt.point(mouse.screenX, mouse.screenY);
+
+                    let currentGlobal = KeyboardSimulator.globalMouse();
+                    let dx = currentGlobal.x - startGlobalPos.x;
+                    let dy = currentGlobal.y - startGlobalPos.y;
+
+                    if (startGlobalPos.x === 0 && startGlobalPos.y === 0 && currentGlobal.x === 0) {
+                        dx = mouse.x - startX;
+                        dy = mouse.y - startY;
+
+                        if (dx === 0 && dy === 0)
+                            return;
+
+                        mainWindow.appX += dx;
+                        mainWindow.appY += dy;
+
+                        startX = mouse.x;
+                        startY = mouse.y;
+                    } else {
+                        if (dx === 0 && dy === 0)
+                            return;
+
+                        mainWindow.appX = startAppX + dx;
+                        mainWindow.appY = startAppY + dy;
+                    }
+
+                    KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
                 }
             }
         }
