@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("ThemeManager", &themeManager);
     engine.rootContext()->setContextProperty("KeyboardSimulator", &keyboardSimulator);
 
-    themeManager.loadTheme("Kittyboard/themes/dark.json");
+    themeManager.loadTheme("Kittyboard/themes/neon.json");
 
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated,

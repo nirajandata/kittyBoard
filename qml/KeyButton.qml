@@ -17,6 +17,18 @@ Item {
     property bool pressed: false
     property bool hovered: false
 
+    // Determine glow color based on text color
+    property color glowColor: {
+        let textColor = t.visual?.textColor ?? "white";
+        if (textColor.toLowerCase() === "#00ff88" || textColor.toLowerCase() === "#00ff00") {
+            return "#ff00ff";  // Magenta for neon green text
+        } else if (textColor.toLowerCase() === "#ffffff") {
+            return "#00ff88";  // Green for white text
+        } else {
+            return "#00ffff";  // Cyan as fallback
+        }
+    }
+
     width: t.layout?.keyWidth ?? 72
     height: t.layout?.keyHeight ?? 72
 
@@ -36,12 +48,12 @@ Item {
         anchors.fill: parent
         radius: t.visual?.radius ?? 18
         color: "transparent"
-        
+
         visible: root.isCapsActive && root.isCapsLock
-        
-        border.color: "#00ff88"
+
+        border.color: root.glowColor
         border.width: 2
-        
+
         Behavior on border.width {
             NumberAnimation {
                 duration: 200
@@ -56,11 +68,11 @@ Item {
         radius: glowLayer.radius + 4
         color: "transparent"
         visible: root.isCapsActive && root.isCapsLock
-        
+
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
-            color: "#00ff88"
+            color: root.glowColor
             opacity: 0.15
             z: -1
         }
@@ -80,8 +92,14 @@ Item {
         }
 
         gradient: Gradient {
-            GradientStop { position: 0.0; color: Qt.lighter(base.color, 1.2) }
-            GradientStop { position: 1.0; color: Qt.darker(base.color, 1.3) }
+            GradientStop {
+                position: 0.0
+                color: Qt.lighter(base.color, 1.2)
+            }
+            GradientStop {
+                position: 1.0
+                color: Qt.darker(base.color, 1.3)
+            }
         }
 
         Rectangle {
@@ -94,10 +112,10 @@ Item {
         Text {
             anchors.centerIn: parent
             text: root.displayText
-            color: root.isCapsActive ? "#00ff88" : (t.visual?.textColor ?? "white")
+            color: root.isCapsActive ? root.glowColor : (t.visual?.textColor ?? "white")
             font.pixelSize: 22
             font.bold: true
-            
+
             Behavior on color {
                 ColorAnimation {
                     duration: 150
