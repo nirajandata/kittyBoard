@@ -24,10 +24,17 @@ public:
 signals:
     void moveWindowRequested(int x, int y);
 
+public slots:
+    void onFrameSwapped();
+
 private:
     void sendKeyCode(int keyCode);
     void runYdotool(const QStringList &args);
 
     long long m_ownWindowId;
     QString m_ydotoolSocket;
+
+    bool m_movePending = false;
+    int m_pendingX = 0;
+    int m_pendingY = 0;
 };

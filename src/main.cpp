@@ -13,6 +13,8 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
+    QQuickWindow::setDefaultAlphaBuffer(true);
+
     ThemeManager themeManager;
     KeyboardSimulator keyboardSimulator;
 
@@ -30,15 +32,17 @@ int main(int argc, char *argv[]) {
             auto *layerWindow = LayerShellQt::Window::get(window);
             layerWindow->setLayer(LayerShellQt::Window::LayerOverlay);
             layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
-
             layerWindow->setAnchors(LayerShellQt::Window::Anchors(LayerShellQt::Window::AnchorLeft | LayerShellQt::Window::AnchorTop));
             layerWindow->setExclusiveZone(0);
 
             QObject::connect(&keyboardSimulator, &KeyboardSimulator::moveWindowRequested,
-                             window, [layerWindow, window](int x, int y) {
+                             window, [layerWindow](int x, int y) {
                                  layerWindow->setMargins(QMargins(x, y, 0, 0));
-                                 window->update();
-                             });
+                             }, Qt::DirectConnection);
+
+            QObject::connect(window, &QQuickWindow::frameSwapped,
+                             &keyboardSimulator, &KeyboardSimulator::onFrameSwapped,
+                             Qt::DirectConnection);
 
             keyboardSimulator.setOwnWindowId(window->winId());
             window->show();
