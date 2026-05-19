@@ -12,45 +12,48 @@ Item {
     property bool isAlpha: label.length === 1 && label.match(/[a-z]/i)
     property string displayText: isAlpha ? (isCapsLock ? label.toUpperCase() : label.toLowerCase()) : label
 
+    property real bgImageOpacity: t.visual?.backgroundImageOpacity ?? 0.0
+
     signal keyPressed(string key)
 
     property bool pressed: false
     property bool hovered: false
 
-    // Determine glow color based on text color
     property color glowColor: {
         let textColor = t.visual?.textColor ?? "white";
         if (textColor.toLowerCase() === "#00ff88" || textColor.toLowerCase() === "#00ff00") {
-            return "#ff00ff";  // Magenta for neon green text
+            return "#ff00ff";
         } else if (textColor.toLowerCase() === "#ffffff") {
-            return "#00ff88";  // Green for white text
+            return "#00ff88";
         } else {
-            return "#00ffff";  // Cyan as fallback
+            return "#00ffff";
         }
     }
+
+    property color resolvedKeyColor: (root.pressed || root.isCapsActive) ? (t.visual?.keyPressedColor ?? "#3a3a3a") : (t.visual?.keyColor ?? "#2b2b2b")
+
+    property real keyAlpha: Math.max(0.15, 1.0 - bgImageOpacity * 0.85)
 
     width: t.layout?.keyWidth ?? 72
     height: t.layout?.keyHeight ?? 72
 
+    // Drop shadow
     Rectangle {
         anchors.centerIn: parent
         width: parent.width * 0.95
         height: parent.height * 0.95
         radius: t.visual?.radius ?? 18
         color: "#000000"
-        opacity: root.pressed ? 0.15 : 0.35
+        opacity: root.pressed ? 0.10 : 0.25
         y: root.pressed ? 2 : 6
     }
 
-    // Glow layer for Caps Lock indicator
     Rectangle {
         id: glowLayer
         anchors.fill: parent
         radius: t.visual?.radius ?? 18
         color: "transparent"
-
         visible: root.isCapsActive && root.isCapsLock
-
         border.color: root.glowColor
         border.width: 2
 
@@ -61,7 +64,6 @@ Item {
         }
     }
 
-    // Subtle glow shadow effect
     Rectangle {
         anchors.fill: glowLayer
         anchors.margins: -4
@@ -82,7 +84,9 @@ Item {
         id: base
         anchors.fill: parent
         radius: t.visual?.radius ?? 18
-        color: (root.pressed || root.isCapsActive) ? (t.visual?.keyPressedColor ?? "#3a3a3a") : (t.visual?.keyColor ?? "#2b2b2b")
+
+        color: Qt.rgba(root.resolvedKeyColor.r, root.resolvedKeyColor.g, root.resolvedKeyColor.b, root.keyAlpha)
+
         y: root.pressed ? 2 : 0
 
         Behavior on y {
@@ -91,15 +95,20 @@ Item {
             }
         }
 
-        gradient: Gradient {
-            GradientStop {
-                position: 0.0
-                color: Qt.lighter(base.color, 1.2)
+        Behavior on color {
+            ColorAnimation {
+                duration: t.behavior?.pressAnimationMs ?? 60
             }
-            GradientStop {
-                position: 1.0
-                color: Qt.darker(base.color, 1.3)
-            }
+        }
+
+        Rectangle {
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: parent.height * 0.45
+            radius: parent.radius
+            color: "#ffffff"
+            opacity: 0.06
         }
 
         Rectangle {
@@ -107,6 +116,12 @@ Item {
             radius: parent.radius
             color: "#ffffff"
             opacity: root.hovered ? (t.visual?.hoverOpacity ?? 0.08) : 0.0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: t.behavior?.hoverAnimationMs ?? 150
+                }
+            }
         }
 
         Text {

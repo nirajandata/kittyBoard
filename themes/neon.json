@@ -1,8 +1,8 @@
 {
   "visual": {
     "background": "#0a0e27",
-    "backgroundImage": "",
-    "backgroundImageOpacity": 0.3,
+    "backgroundImage": "qrc:/qt/qml/Kittyboard/themes/mountain.jpg",
+    "backgroundImageOpacity": 0.4,
     "keyColor": "#1a1f3a",
     "keyPressedColor": "#0f1425",
     "specialKeyColor": "#2a1f3a",

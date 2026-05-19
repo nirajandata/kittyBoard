@@ -34,6 +34,15 @@ Window {
         color: t.visual?.background ?? "#121212"
         radius: t.visual?.radius ?? 18
 
+        Image {
+            anchors.fill: parent
+            source: t.visual?.backgroundImage ? t.visual.backgroundImage : ""
+            opacity: t.visual?.backgroundImageOpacity ?? 0.3
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+            visible: source !== ""
+        }
+
         Rectangle {
             id: dragHandle
             anchors.top: parent.top
