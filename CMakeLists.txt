@@ -13,7 +13,15 @@ qt_add_executable(appKittyboard
     src/KeyboardSimulator.cpp
     src/KeyboardSimulator.h
     src/ThemeManager.cpp
+)
 
+file(GLOB_RECURSE THEME_FILES
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "themes/*.json"
+    "themes/*.jpg"
+    "themes/*.jpeg"
+    "themes/*.png"
 )
 
 qt_add_qml_module(appKittyboard
@@ -22,9 +30,9 @@ qt_add_qml_module(appKittyboard
         qml/Main.qml
         qml/KeyButton.qml
     RESOURCES
-        themes/dark.json
-        themes/neon.json
-        SOURCES src/ThemeManager.h
+        ${THEME_FILES}
+    SOURCES
+        src/ThemeManager.h
 )
 
 set_target_properties(appKittyboard PROPERTIES
