@@ -30,6 +30,42 @@ Item {
         y: root.pressed ? 2 : 6
     }
 
+    // Glow layer for Caps Lock indicator
+    Rectangle {
+        id: glowLayer
+        anchors.fill: parent
+        radius: t.visual?.radius ?? 18
+        color: "transparent"
+        
+        visible: root.isCapsActive && root.isCapsLock
+        
+        border.color: "#00ff88"
+        border.width: 2
+        
+        Behavior on border.width {
+            NumberAnimation {
+                duration: 200
+            }
+        }
+    }
+
+    // Subtle glow shadow effect
+    Rectangle {
+        anchors.fill: glowLayer
+        anchors.margins: -4
+        radius: glowLayer.radius + 4
+        color: "transparent"
+        visible: root.isCapsActive && root.isCapsLock
+        
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: "#00ff88"
+            opacity: 0.15
+            z: -1
+        }
+    }
+
     Rectangle {
         id: base
         anchors.fill: parent
@@ -58,9 +94,15 @@ Item {
         Text {
             anchors.centerIn: parent
             text: root.displayText
-            color: t.visual?.textColor ?? "white"
+            color: root.isCapsActive ? "#00ff88" : (t.visual?.textColor ?? "white")
             font.pixelSize: 22
             font.bold: true
+            
+            Behavior on color {
+                ColorAnimation {
+                    duration: 150
+                }
+            }
         }
     }
 
