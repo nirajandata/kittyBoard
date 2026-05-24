@@ -81,14 +81,3 @@ The project uses **CMake** as its build system. Follow these steps to build Kitt
    sudo make install
    ```
 
-### CMakeLists.txt Overview
-
-The `CMakeLists.txt` file defines the build configuration for KittyBoard:
-
-- **Minimum CMake version:** 3.16
-- **Qt 6 modules required:** Core, Gui, Quick, WaylandClient
-- **External dependencies:** LayerShellQt
-- **C++ standard:** C++17
-- **Sources:** QML files and C++ backend implementation
-
-For detailed configuration, refer to the `CMakeLists.txt` file in the project root.
