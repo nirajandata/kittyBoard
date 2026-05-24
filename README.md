@@ -3,7 +3,7 @@
 A fully customizable **Qt 6.11 + QML-based virtual keyboard engine** built for modern Wayland compositors. It features a theme-driven UI, modular key components, a JSON-based styling system, and system-wide input injection via `ydotool`.
 
 ## Overview
-
+![Screenshot](assets/screenshot_1.png) <br>
 KittyBoard is a lightweight virtual keyboard built using **Qt Quick (QML)** and a **C++ backend**. Designed specifically for Wayland environments, it utilizes the `wlr-layer-shell` protocol to render as a persistent overlay surface without stealing focus from your active application.
 
 ## Features
