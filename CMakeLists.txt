@@ -11,6 +11,8 @@ qt_standard_project_setup(REQUIRES 6.10)
 qt_add_executable(appKittyboard
     src/main.cpp
     src/KeyboardSimulator.cpp
+    src/SuggestionEngine.h
+    src/SuggestionEngine.cpp
     src/KeyboardSimulator.h
     src/ThemeManager.cpp
 )
@@ -31,6 +33,7 @@ qt_add_qml_module(appKittyboard
         qml/KeyButton.qml
     RESOURCES
         ${THEME_FILES}
+        assets/english_10k.txt
     SOURCES
         src/ThemeManager.h
 )
