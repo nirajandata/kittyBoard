@@ -29,8 +29,6 @@ int main(int argc, char *argv[]) {
     themeManager.loadTheme("Kittyboard/themes/neon.json");
     keyboardSimulator.loadDictionary("Kittyboard/assets/english_10k.txt");
 
-
-
     qDebug() << "Dict test:" << keyboardSimulator.suggestions();
 
     QObject::connect(
@@ -49,10 +47,6 @@ int main(int argc, char *argv[]) {
                              window, [layerWindow](int x, int y) {
                                  layerWindow->setMargins(QMargins(x, y, 0, 0));
                              }, Qt::DirectConnection);
-
-            QObject::connect(window, &QQuickWindow::frameSwapped,
-                             &keyboardSimulator, &KeyboardSimulator::onFrameSwapped,
-                             Qt::DirectConnection);
 
             keyboardSimulator.setOwnWindowId(window->winId());
             window->show();

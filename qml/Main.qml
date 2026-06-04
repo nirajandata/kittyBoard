@@ -5,6 +5,8 @@ Window {
     id: mainWindow
     width: 900
     height: 480
+    minimumWidth: 600
+    minimumHeight: 380
     visible: false
     title: "Kittyboard"
     flags: Qt.FramelessWindowHint
@@ -13,6 +15,10 @@ Window {
     property real appY: 100
     property var t: ({})
     property bool capsLock: false
+
+    property real dragStartAppX: 0
+    property real dragStartAppY: 0
+    property var dragStartGlobal: Qt.point(0, 0)
 
     Connections {
         target: ThemeManager
@@ -99,6 +105,7 @@ Window {
             }
 
             MouseArea {
+                id: dragArea
                 anchors.left: parent.left
                 anchors.right: closeBtn.left
                 anchors.rightMargin: 8
@@ -106,23 +113,33 @@ Window {
                 anchors.bottom: parent.bottom
                 cursorShape: Qt.SizeAllCursor
 
-                property real lastX: 0
-                property real lastY: 0
+                onPressed: {
+                    mainWindow.dragStartGlobal = KeyboardSimulator.globalMouse();
+                    mainWindow.dragStartAppX = mainWindow.appX;
+                    mainWindow.dragStartAppY = mainWindow.appY;
+                }
 
-                onPressed: mouse => {
-                    lastX = mouse.x;
-                    lastY = mouse.y;
+                Timer {
+                    id: dragTimer
+                    interval: 4
+                    repeat: true
+                    running: dragArea.pressed
+                    onTriggered: {
+                        var globalNow = KeyboardSimulator.globalMouse();
+                        var newX = mainWindow.dragStartAppX + (globalNow.x - mainWindow.dragStartGlobal.x);
+                        var newY = mainWindow.dragStartAppY + (globalNow.y - mainWindow.dragStartGlobal.y);
+                        var roundedX = Math.round(newX);
+                        var roundedY = Math.round(newY);
+                        if (roundedX !== Math.round(mainWindow.appX) || roundedY !== Math.round(mainWindow.appY)) {
+                            mainWindow.appX = newX;
+                            mainWindow.appY = newY;
+                            KeyboardSimulator.moveWindow(roundedX, roundedY);
+                        }
+                    }
                 }
-                onPositionChanged: mouse => {
-                    if (!pressed)
-                        return;
-                    mainWindow.appX += mouse.x - lastX;
-                    mainWindow.appY += mouse.y - lastY;
-                    lastX = mouse.x;
-                    lastY = mouse.y;
-                    KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
-                }
+
                 onReleased: {
+                    dragTimer.stop();
                     KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
                 }
             }
@@ -165,9 +182,7 @@ Window {
                     property bool isPressed: chipMouse.containsPress
 
                     color: isPressed ? (t.visual?.keyPressColor ?? "#1a2a2a") : hovered ? (t.visual?.keyHoverColor ?? "#2a3a3a") : (t.visual?.keyColor ?? "#1e2d3d")
-
                     opacity: isPressed ? 0.75 : 1.0
-
                     border.color: t.visual?.textColor ?? "#00e5a0"
                     border.width: hovered ? 1 : 0
 
@@ -303,6 +318,73 @@ Window {
                     height: t.layout?.keyHeight ?? 72
                     autoSend: false
                     onKeyPressed: KeyboardSimulator.sendEnter()
+                }
+            }
+        }
+
+        Item {
+            id: resizeHandle
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            width: 24
+            height: 24
+
+            Canvas {
+                id: resizeCanvas
+                anchors.fill: parent
+                onPaint: {
+                    var ctx = getContext("2d");
+                    ctx.clearRect(0, 0, width, height);
+                    ctx.strokeStyle = t.visual?.textColor ?? "#00e5a0";
+                    ctx.globalAlpha = resizeMouse.containsMouse ? 0.7 : 0.3;
+                    ctx.lineWidth = 1.5;
+                    ctx.lineCap = "round";
+                    var margin = 4;
+                    var gap = 5;
+                    for (var i = 0; i < 3; i++) {
+                        var offset = margin + i * gap;
+                        ctx.beginPath();
+                        ctx.moveTo(width - margin, offset);
+                        ctx.lineTo(offset, height - margin);
+                        ctx.stroke();
+                    }
+                }
+
+                Connections {
+                    target: resizeMouse
+                    function onContainsMouseChanged() {
+                        resizeCanvas.requestPaint();
+                    }
+                }
+            }
+
+            MouseArea {
+                id: resizeMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.SizeFDiagCursor
+
+                property real startMouseX: 0
+                property real startMouseY: 0
+                property real startWidth: 0
+                property real startHeight: 0
+
+                onPressed: mouse => {
+                    startMouseX = mouse.x + mainWindow.appX + resizeHandle.x;
+                    startMouseY = mouse.y + mainWindow.appY + resizeHandle.y;
+                    startWidth = mainWindow.width;
+                    startHeight = mainWindow.height;
+                }
+
+                onPositionChanged: mouse => {
+                    if (!pressed)
+                        return;
+                    var globalX = mouse.x + mainWindow.appX + resizeHandle.x;
+                    var globalY = mouse.y + mainWindow.appY + resizeHandle.y;
+                    var newW = startWidth + (globalX - startMouseX);
+                    var newH = startHeight + (globalY - startMouseY);
+                    mainWindow.width = Math.max(mainWindow.minimumWidth, newW);
+                    mainWindow.height = Math.max(mainWindow.minimumHeight, newH);
                 }
             }
         }

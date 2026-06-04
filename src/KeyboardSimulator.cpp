@@ -67,17 +67,10 @@ void KeyboardSimulator::setOwnWindowId(long long winId) {
 }
 
 void KeyboardSimulator::moveWindow(int x, int y) {
-    m_pendingX = x;
-    m_pendingY = y;
-    m_movePending = true;
+    emit moveWindowRequested(x,y);
 }
 
-void KeyboardSimulator::onFrameSwapped() {
-    if (m_movePending) {
-        m_movePending = false;
-        emit moveWindowRequested(m_pendingX, m_pendingY);
-    }
-}
+
 
 QPoint KeyboardSimulator::globalMouse() const {
     return QCursor::pos();

@@ -34,8 +34,6 @@ signals:
     void moveWindowRequested(int x, int y);
     void suggestionsChanged();
 
-public slots:
-    void onFrameSwapped();
 
 private:
     void sendKeyCode(int keyCode);
@@ -45,10 +43,6 @@ private:
 
     long long m_ownWindowId;
     QString m_ydotoolSocket;
-
-    bool m_movePending = false;
-    int m_pendingX = 0;
-    int m_pendingY = 0;
 
     int m_currentWordLength = 0;
     QString m_currentWord;
