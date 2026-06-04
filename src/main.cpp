@@ -3,6 +3,8 @@
 #include <QQmlContext>
 #include <QQuickWindow>
 #include <QMargins>
+#include <QFile>
+#include <QDir>
 
 #include <LayerShellQt/Window>
 
@@ -21,7 +23,15 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("ThemeManager", &themeManager);
     engine.rootContext()->setContextProperty("KeyboardSimulator", &keyboardSimulator);
 
+    qDebug() << "Dict path exists:" << QFile::exists("Kittyboard/assets/english_10k.txt");
+    qDebug() << "Working dir:" << QDir::currentPath();
+
     themeManager.loadTheme("Kittyboard/themes/neon.json");
+    keyboardSimulator.loadDictionary("Kittyboard/assets/english_10k.txt");
+
+
+
+    qDebug() << "Dict test:" << keyboardSimulator.suggestions();
 
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated,

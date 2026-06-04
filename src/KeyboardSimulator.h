@@ -4,9 +4,11 @@
 #include <QString>
 #include <QStringList>
 #include <QPoint>
+#include "SuggestionEngine.h"
 
 class KeyboardSimulator : public QObject {
     Q_OBJECT
+    Q_PROPERTY(QStringList suggestions READ suggestions NOTIFY suggestionsChanged)
 
 public:
     explicit KeyboardSimulator(QObject *parent = nullptr);
@@ -21,8 +23,16 @@ public:
     Q_INVOKABLE void moveWindow(int x, int y);
     Q_INVOKABLE QPoint globalMouse() const;
 
+    Q_INVOKABLE void applySuggestion(const QString &word);
+
+    QStringList suggestions() const;
+
+    void loadDictionary(const QString &path);
+    void loadUserData(const QString &path);
+
 signals:
     void moveWindowRequested(int x, int y);
+    void suggestionsChanged();
 
 public slots:
     void onFrameSwapped();
@@ -30,6 +40,7 @@ public slots:
 private:
     void sendKeyCode(int keyCode);
     void runYdotool(const QStringList &args);
+    void updateSuggestions();
 
     long long m_ownWindowId;
     QString m_ydotoolSocket;
@@ -37,4 +48,11 @@ private:
     bool m_movePending = false;
     int m_pendingX = 0;
     int m_pendingY = 0;
+
+    int m_currentWordLength = 0;
+    QString m_currentWord;
+
+    SuggestionEngine m_engine;
+    QStringList m_suggestions;
+    QString m_userDataPath;
 };
