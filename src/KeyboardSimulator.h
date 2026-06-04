@@ -41,6 +41,7 @@ private:
     void sendKeyCode(int keyCode);
     void runYdotool(const QStringList &args);
     void updateSuggestions();
+    void commitCurrentWord();
 
     long long m_ownWindowId;
     QString m_ydotoolSocket;
@@ -51,6 +52,7 @@ private:
 
     int m_currentWordLength = 0;
     QString m_currentWord;
+    QString m_previousWord;
 
     SuggestionEngine m_engine;
     QStringList m_suggestions;

@@ -4,8 +4,8 @@
 #include <QHash>
 #include <QCursor>
 #include <QStandardPaths>
+#include <QDir>
 #include <unistd.h>
-#include <QDebug>
 
 static const QHash<QString, int> keyCodeMap = {
     {"a", 30}, {"b", 48}, {"c", 46}, {"d", 32}, {"e", 18},
@@ -24,6 +24,7 @@ KeyboardSimulator::KeyboardSimulator(QObject *parent)
     m_ydotoolSocket = QString("/run/user/%1/.ydotool_socket").arg(getuid());
 
     QString dataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir().mkpath(dataDir);
     m_userDataPath = dataDir + "/learned_words.json";
     m_engine.loadUserData(m_userDataPath);
 }
@@ -42,14 +43,23 @@ QStringList KeyboardSimulator::suggestions() const {
 }
 
 void KeyboardSimulator::updateSuggestions() {
+    QStringList next = m_currentWord.isEmpty()
+        ? QStringList{}
+        : m_engine.suggest(m_currentWord, m_previousWord, 3);
 
-    qDebug() << "prefix:" << m_currentWord << "results:" << m_engine.suggest(m_currentWord, 3);
-
-    QStringList next = m_currentWord.isEmpty() ? QStringList{} : m_engine.suggest(m_currentWord, 3);
     if (next != m_suggestions) {
         m_suggestions = next;
         emit suggestionsChanged();
     }
+}
+
+void KeyboardSimulator::commitCurrentWord() {
+    if (!m_currentWord.isEmpty()) {
+        m_engine.learnWord(m_currentWord, m_previousWord);
+        m_previousWord = m_currentWord;
+    }
+    m_currentWord.clear();
+    m_currentWordLength = 0;
 }
 
 void KeyboardSimulator::setOwnWindowId(long long winId) {
@@ -127,34 +137,24 @@ void KeyboardSimulator::sendBackspace() {
 
 void KeyboardSimulator::sendSpace() {
     sendKeyCode(keyCodeMap.value("space"));
-
-    if (!m_currentWord.isEmpty()) {
-        m_engine.learnWord(m_currentWord);
-    }
-
-    m_currentWordLength = 0;
-    m_currentWord.clear();
+    commitCurrentWord();
     updateSuggestions();
 }
 
 void KeyboardSimulator::sendEnter() {
     sendKeyCode(keyCodeMap.value("enter"));
-
-    if (!m_currentWord.isEmpty()) {
-        m_engine.learnWord(m_currentWord);
-    }
-
-    m_currentWordLength = 0;
-    m_currentWord.clear();
+    commitCurrentWord();
+    m_previousWord.clear();
     updateSuggestions();
 }
 
 void KeyboardSimulator::applySuggestion(const QString &word) {
-    int backspacesNeeded = m_currentWordLength;
-    for (int i = 0; i < backspacesNeeded; ++i) {
+    for (int i = 0; i < m_currentWordLength; ++i) {
         sendKeyCode(keyCodeMap.value("backspace"));
     }
 
+    m_engine.learnWord(word, m_previousWord);
+    m_previousWord = word.toLower().trimmed();
     m_currentWord.clear();
     m_currentWordLength = 0;
 
@@ -162,6 +162,9 @@ void KeyboardSimulator::applySuggestion(const QString &word) {
         sendKey(QString(c));
     }
 
-    m_engine.learnWord(word);
-    sendSpace();
+    m_currentWord.clear();
+    m_currentWordLength = 0;
+
+    sendKeyCode(keyCodeMap.value("space"));
+    updateSuggestions();
 }

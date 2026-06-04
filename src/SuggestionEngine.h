@@ -17,6 +17,14 @@ struct QCharHash {
     }
 };
 
+struct QStringHash {
+    std::size_t operator()(const QString &s) const noexcept {
+        return std::hash<std::u16string>{}(s.toStdU16String());
+    }
+};
+
+using BigramMap = std::unordered_map<QString, std::unordered_map<QString, uint32_t, QStringHash>, QStringHash>;
+
 class SuggestionEngine {
 public:
     SuggestionEngine();
@@ -25,8 +33,8 @@ public:
     void loadUserData(const QString &path);
     void saveUserData(const QString &path) const;
 
-    void learnWord(const QString &word);
-    QStringList suggest(const QString &prefix, int maxResults = 3) const;
+    void learnWord(const QString &word, const QString &prevWord = QString());
+    QStringList suggest(const QString &prefix, const QString &prevWord = QString(), int maxResults = 3) const;
 
 private:
     struct TrieNode {
@@ -40,5 +48,6 @@ private:
                             QList<WordEntry> &results) const;
 
     std::unique_ptr<TrieNode> m_root;
+    BigramMap m_bigrams;
     QString m_userDataPath;
 };
