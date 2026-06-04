@@ -76,7 +76,6 @@ Window {
                 height: 22
                 radius: 11
                 color: closeBtnArea.containsMouse ? "#e05555" : "#aa3333"
-
                 Behavior on color {
                     ColorAnimation {
                         duration: 120
@@ -114,7 +113,6 @@ Window {
                     lastX = mouse.x;
                     lastY = mouse.y;
                 }
-
                 onPositionChanged: mouse => {
                     if (!pressed)
                         return;
@@ -124,111 +122,105 @@ Window {
                     lastY = mouse.y;
                     KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
                 }
-
                 onReleased: {
                     KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
                 }
             }
         }
 
-        Rectangle {
+        Row {
             id: suggestionBar
-            anchors.top: dragHandle.bottom
-            anchors.topMargin: 6
-            anchors.horizontalCenter: parent.horizontalCenter
-            height: 44
-            width: parent.width - 24
-            radius: 22
-            color: "#0f0f0f"
-            border.color: "#2a2a2a"
-            border.width: 1
 
             readonly property var suggs: (typeof KeyboardSimulator !== "undefined" && KeyboardSimulator !== null && KeyboardSimulator.suggestions) ? KeyboardSimulator.suggestions : []
 
-            visible: suggs.length > 0
+            anchors.top: dragHandle.bottom
+            anchors.topMargin: 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 10
+            height: suggs.length > 0 ? 46 : 0
+            opacity: suggs.length > 0 ? 1.0 : 0.0
 
+            Behavior on height {
+                NumberAnimation {
+                    duration: 150
+                    easing.type: Easing.OutCubic
+                }
+            }
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 120
+                    duration: 150
                 }
             }
 
-            opacity: suggs.length > 0 ? 1.0 : 0.0
+            Repeater {
+                model: suggestionBar.suggs
 
-            Row {
-                id: suggRow
-                anchors.centerIn: parent
-                spacing: 2
+                delegate: Rectangle {
+                    id: chip
+                    width: Math.max(100, chipLabel.implicitWidth + 44)
+                    height: 42
+                    radius: t.visual?.radius ?? 14
 
-                Repeater {
-                    model: suggestionBar.suggs
+                    property bool hovered: chipMouse.containsMouse
+                    property bool isPressed: chipMouse.containsPress
 
-                    delegate: Rectangle {
-                        id: suggChip
-                        width: Math.max(88, chipLabel.implicitWidth + 36)
-                        height: 36
-                        radius: 18
+                    color: isPressed ? (t.visual?.keyPressColor ?? "#1a2a2a") : hovered ? (t.visual?.keyHoverColor ?? "#2a3a3a") : (t.visual?.keyColor ?? "#1e2d3d")
 
-                        property bool hovered: chipMouse.containsMouse
-                        property bool isPressed: chipMouse.containsPress
+                    opacity: isPressed ? 0.75 : 1.0
 
-                        color: isPressed ? "#3a3a3a" : (hovered ? "#252525" : "transparent")
+                    border.color: t.visual?.textColor ?? "#00e5a0"
+                    border.width: hovered ? 1 : 0
 
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: 100
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 100
+                        }
+                    }
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 80
+                        }
+                    }
+                    Behavior on border.width {
+                        NumberAnimation {
+                            duration: 100
+                        }
+                    }
+
+                    transform: Scale {
+                        origin.x: chip.width / 2
+                        origin.y: chip.height / 2
+                        xScale: chip.isPressed ? 0.93 : 1.0
+                        yScale: chip.isPressed ? 0.93 : 1.0
+                        Behavior on xScale {
+                            NumberAnimation {
+                                duration: 80
+                                easing.type: Easing.OutCubic
                             }
                         }
-
-                        transform: Scale {
-                            origin.x: suggChip.width / 2
-                            origin.y: suggChip.height / 2
-                            xScale: suggChip.isPressed ? 0.94 : 1.0
-                            yScale: suggChip.isPressed ? 0.94 : 1.0
-                            Behavior on xScale {
-                                NumberAnimation {
-                                    duration: 80
-                                    easing.type: Easing.OutCubic
-                                }
-                            }
-                            Behavior on yScale {
-                                NumberAnimation {
-                                    duration: 80
-                                    easing.type: Easing.OutCubic
-                                }
+                        Behavior on yScale {
+                            NumberAnimation {
+                                duration: 80
+                                easing.type: Easing.OutCubic
                             }
                         }
+                    }
 
-                        Rectangle {
-                            visible: index < suggestionBar.suggs.length - 1
-                            anchors.right: parent.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 1
-                            height: 16
-                            color: "#2a2a2a"
-                        }
+                    Text {
+                        id: chipLabel
+                        anchors.centerIn: parent
+                        text: modelData
+                        color: t.visual?.textColor ?? "#00e5a0"
+                        font.pixelSize: 15
+                        font.weight: Font.Medium
+                        font.letterSpacing: 0.5
+                    }
 
-                        Text {
-                            id: chipLabel
-                            anchors.centerIn: parent
-                            text: modelData
-                            color: suggChip.hovered ? "#ffffff" : "#c8c8c8"
-                            font.pixelSize: 14
-                            font.weight: Font.Medium
-                            font.letterSpacing: 0.3
-                            Behavior on color {
-                                ColorAnimation {
-                                    duration: 100
-                                }
-                            }
-                        }
-
-                        MouseArea {
-                            id: chipMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: KeyboardSimulator.applySuggestion(modelData)
-                        }
+                    MouseArea {
+                        id: chipMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: KeyboardSimulator.applySuggestion(modelData)
                     }
                 }
             }
