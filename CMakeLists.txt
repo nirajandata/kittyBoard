@@ -36,6 +36,7 @@ qt_add_qml_module(appKittyboard
         assets/english_10k.txt
     SOURCES
         src/ThemeManager.h
+        QML_FILES qml/ThemeEditor.qml
 )
 
 set_target_properties(appKittyboard PROPERTIES
