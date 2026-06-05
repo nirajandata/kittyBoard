@@ -38,8 +38,32 @@ Window {
         anchors.fill: parent
         color: t.visual?.background ?? "#121212"
         radius: t.visual?.radius ?? 18
+        opacity: t.visual?.backgroundOpacity ?? 1.0
         layer.enabled: true
         layer.smooth: true
+
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            visible: t.visual?.backgroundGradient?.enabled ?? false
+            gradient: Gradient {
+                orientation: {
+                    var a = t.visual?.backgroundGradient?.angle ?? 135;
+                    if (a === 0 || a === 180)
+                        return Gradient.Horizontal;
+                    return Gradient.Vertical;
+                }
+                GradientStop {
+                    position: 0.0
+                    color: t.visual?.backgroundGradient?.startColor ?? "#1a1a2e"
+                }
+                GradientStop {
+                    position: 1.0
+                    color: t.visual?.backgroundGradient?.endColor ?? "#16213e"
+                }
+            }
+            opacity: 0.9
+        }
 
         Image {
             anchors.fill: parent
@@ -55,7 +79,7 @@ Window {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 32
+            height: 36
             color: "transparent"
 
             Row {
@@ -74,13 +98,36 @@ Window {
             }
 
             Rectangle {
+                id: settingsBtn
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 10
+                width: 28
+                height: 28
+                radius: 14
+                color: settingsArea.containsMouse ? "#444444" : "#333333"
+                Text {
+                    anchors.centerIn: parent
+                    text: "⚙"
+                    color: "#ffffff"
+                    font.pixelSize: 16
+                }
+                MouseArea {
+                    id: settingsArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: themeEditor.visible = true
+                }
+            }
+
+            Rectangle {
                 id: closeBtn
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.rightMargin: 10
-                width: 22
-                height: 22
-                radius: 11
+                width: 24
+                height: 24
+                radius: 12
                 color: closeBtnArea.containsMouse ? "#e05555" : "#aa3333"
                 Behavior on color {
                     ColorAnimation {
@@ -92,7 +139,7 @@ Window {
                     anchors.centerIn: parent
                     text: "✕"
                     color: "#ffffff"
-                    font.pixelSize: 11
+                    font.pixelSize: 12
                     font.bold: true
                 }
 
@@ -106,9 +153,10 @@ Window {
 
             MouseArea {
                 id: dragArea
-                anchors.left: parent.left
+                anchors.left: settingsBtn.right
                 anchors.right: closeBtn.left
                 anchors.rightMargin: 8
+                anchors.leftMargin: 8
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 cursorShape: Qt.SizeAllCursor
@@ -181,7 +229,7 @@ Window {
                     property bool hovered: chipMouse.containsMouse
                     property bool isPressed: chipMouse.containsPress
 
-                    color: isPressed ? (t.visual?.keyPressColor ?? "#1a2a2a") : hovered ? (t.visual?.keyHoverColor ?? "#2a3a3a") : (t.visual?.keyColor ?? "#1e2d3d")
+                    color: isPressed ? (t.visual?.keyPressedColor ?? "#1a2a2a") : hovered ? (t.visual?.keyHoverColor ?? "#2a3a2a") : (t.visual?.keyColor ?? "#1e2d3d")
                     opacity: isPressed ? 0.75 : 1.0
                     border.color: t.visual?.textColor ?? "#00e5a0"
                     border.width: hovered ? 1 : 0
@@ -226,9 +274,27 @@ Window {
                         anchors.centerIn: parent
                         text: modelData
                         color: t.visual?.textColor ?? "#00e5a0"
-                        font.pixelSize: 15
-                        font.weight: Font.Medium
-                        font.letterSpacing: 0.5
+                        font.pixelSize: t.label?.fontSize ?? 15
+                        font.bold: t.label?.bold ?? false
+                        font.italic: t.label?.italic ?? false
+                        font.letterSpacing: t.label?.letterSpacing ?? 0.5
+                        font.family: t.label?.fontFamily ?? "Inter"
+                        font.weight: {
+                            var w = t.label?.fontWeight ?? "Medium";
+                            if (w === "Thin")
+                                return Font.Thin;
+                            if (w === "Light")
+                                return Font.Light;
+                            if (w === "Normal")
+                                return Font.Normal;
+                            if (w === "Medium")
+                                return Font.Medium;
+                            if (w === "Bold")
+                                return Font.Bold;
+                            if (w === "Black")
+                                return Font.Black;
+                            return Font.Medium;
+                        }
                     }
 
                     MouseArea {
@@ -387,6 +453,12 @@ Window {
                     mainWindow.height = Math.max(mainWindow.minimumHeight, newH);
                 }
             }
+        }
+
+        ThemeEditor {
+            id: themeEditor
+            anchors.fill: parent
+            visible: false
         }
     }
 }

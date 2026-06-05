@@ -12,24 +12,24 @@
 #include "KeyboardSimulator.h"
 
 int main(int argc, char *argv[]) {
-    QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine;
-
     QQuickWindow::setDefaultAlphaBuffer(true);
+    QGuiApplication app(argc, argv);
 
-    ThemeManager themeManager;
-    KeyboardSimulator keyboardSimulator;
-
-    engine.rootContext()->setContextProperty("ThemeManager", &themeManager);
-    engine.rootContext()->setContextProperty("KeyboardSimulator", &keyboardSimulator);
+    auto *themeManager      = new ThemeManager(&app);
+    auto *keyboardSimulator = new KeyboardSimulator(&app);
 
     qDebug() << "Dict path exists:" << QFile::exists("Kittyboard/assets/english_10k.txt");
     qDebug() << "Working dir:" << QDir::currentPath();
 
-    themeManager.loadTheme("Kittyboard/themes/neon.json");
-    keyboardSimulator.loadDictionary("Kittyboard/assets/english_10k.txt");
+    themeManager->loadTheme("Kittyboard/themes/neon.json");
+    keyboardSimulator->loadDictionary("Kittyboard/assets/english_10k.txt");
 
-    qDebug() << "Dict test:" << keyboardSimulator.suggestions();
+    qDebug() << "Dict test:" << keyboardSimulator->suggestions();
+
+    QQmlApplicationEngine engine;
+
+    engine.rootContext()->setContextProperty("ThemeManager",      themeManager);
+    engine.rootContext()->setContextProperty("KeyboardSimulator", keyboardSimulator);
 
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated,
@@ -40,25 +40,24 @@ int main(int argc, char *argv[]) {
             auto *layerWindow = LayerShellQt::Window::get(window);
             layerWindow->setLayer(LayerShellQt::Window::LayerOverlay);
             layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
-            layerWindow->setAnchors(LayerShellQt::Window::Anchors(LayerShellQt::Window::AnchorLeft | LayerShellQt::Window::AnchorTop));
+            layerWindow->setAnchors(LayerShellQt::Window::Anchors(
+                LayerShellQt::Window::AnchorLeft | LayerShellQt::Window::AnchorTop));
             layerWindow->setExclusiveZone(0);
 
-            QObject::connect(&keyboardSimulator, &KeyboardSimulator::moveWindowRequested,
+            QObject::connect(keyboardSimulator, &KeyboardSimulator::moveWindowRequested,
                              window, [layerWindow](int x, int y) {
                                  layerWindow->setMargins(QMargins(x, y, 0, 0));
                              }, Qt::DirectConnection);
 
-            keyboardSimulator.setOwnWindowId(window->winId());
+            keyboardSimulator->setOwnWindowId(window->winId());
             window->show();
         },
-        Qt::QueuedConnection
-        );
+        Qt::QueuedConnection);
 
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/Kittyboard/qml/Main.qml")));
 
-    if (engine.rootObjects().isEmpty()) {
+    if (engine.rootObjects().isEmpty())
         return -1;
-    }
 
     return app.exec();
 }
