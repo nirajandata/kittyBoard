@@ -1,34 +1,69 @@
 {
   "visual": {
-    "background": "#0a0e27",
+    "keyColor": "#2b2b2b",
+    "keyPressedColor": "#3a3a3a",
+    "keyHoverColor": "#353535",
+    "textColor": "#ffffff",
+    "borderColor": "#33ffffff",
+    "radius": 18,
+    "pressScale": 0.93,
+    "hoverOpacity": 0.08,
+    "background": "#121212",
+    "backgroundOpacity": 1.0,
+    "backgroundGradient": {
+      "enabled": true,
+      "angle": 135,
+      "startColor": "#1a1a2e",
+      "endColor": "#16213e"
+    },
     "backgroundImage": "qrc:/qt/qml/Kittyboard/themes/mountain.jpg",
-    "backgroundImageOpacity": 0.4,
-    "keyColor": "#1a1f3a",
-    "keyPressedColor": "#0f1425",
-    "specialKeyColor": "#2a1f3a",
-    "modkeyColor": "#1a2a3a",
-    "spacebarColor": "#0f0f1f",
-    "kittyKeyColor": "#3a1f4a",
-    "textColor": "#00ff88",
-    "hoverOpacity": 0.15,
-    "radius": 16
+    "backgroundImageOpacity": 0.3,
+    "shadow": {
+      "enabled": true,
+      "color": "#000000",
+      "blur": 24,
+      "x": 0,
+      "y": 8,
+      "opacity": 0.4
+    },
+    "keyStyle": "flat",
+    "keyGradient": {
+      "enabled": false,
+      "angle": 180,
+      "startColor": "#3a3a3a",
+      "endColor": "#2b2b2b"
+    },
+    "keyBorderWidth": 1,
+    "keyShadow": {
+      "enabled": true,
+      "color": "#000000",
+      "blur": 12,
+      "x": 0,
+      "y": 4,
+      "opacity": 0.3
+    }
+  },
+  "label": {
+    "fontFamily": "Inter",
+    "fontSize": 15,
+    "bold": false,
+    "italic": false,
+    "letterSpacing": 0.5,
+    "fontWeight": "Medium",
+    "uppercase": false
   },
   "layout": {
-    "keyWidth": 72,
-    "keyHeight": 72,
+    "rowSpacing": 12,
     "keySpacing": 8,
-    "rowSpacing": 8
+    "keyHeight": 72,
+    "keyWidth": 72
   },
   "behavior": {
-    "pressAnimationMs": 80,
-    "hoverAnimationMs": 150
+    "pressAnimationMs": 60,
+    "longPressMs": 450
   },
-  "effects": {
-    "glareEnabled": true,
-    "glareColor": "#00ffff",
-    "glareIntensity": 0.8,
-    "shadowEnabled": true,
-    "shadowColor": "#000000",
-    "shadowOpacity": 0.4
+  "features": {
+    "enableShadow": true,
+    "enableHover": true
   }
 }
