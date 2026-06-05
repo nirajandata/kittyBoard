@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QVariantMap>
+#include <QString>
 
 class ThemeManager : public QObject {
     Q_OBJECT
@@ -10,13 +11,17 @@ class ThemeManager : public QObject {
 public:
     explicit ThemeManager(QObject *parent = nullptr);
 
-    QVariantMap theme() const { return m_theme; }
-
     Q_INVOKABLE void loadTheme(const QString &path);
+    Q_INVOKABLE void saveCurrentTheme(const QString &path);
+    Q_INVOKABLE QVariant getThemeProperty(const QString &path) const;
+    Q_INVOKABLE void setThemeProperty(const QString &path, const QVariant &value);
+
+    QVariantMap theme() const;
 
 signals:
     void themeChanged();
 
 private:
     QVariantMap m_theme;
+    QVariantMap deepSet(QVariantMap map, const QStringList &path, const QVariant &value) const;
 };
