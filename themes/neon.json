@@ -1,69 +1,60 @@
 {
   "visual": {
-    "keyColor": "#2b2b2b",
-    "keyPressedColor": "#3a3a3a",
-    "keyHoverColor": "#353535",
-    "textColor": "#ffffff",
-    "borderColor": "#33ffffff",
-    "radius": 18,
-    "pressScale": 0.93,
-    "hoverOpacity": 0.08,
-    "background": "#121212",
+    "background": "#0a0a0f",
     "backgroundOpacity": 1.0,
+    "radius": 14,
     "backgroundGradient": {
       "enabled": true,
       "angle": 135,
-      "startColor": "#1a1a2e",
-      "endColor": "#16213e"
+      "startColor": "#0f0f1a",
+      "endColor": "#1a0a2e"
     },
-    "backgroundImage": "qrc:/qt/qml/Kittyboard/themes/mountain.jpg",
+    "backgroundImage": "qrc:/qt/qml/Kittyboard/themes/neon.jpg",
     "backgroundImageOpacity": 0.3,
     "shadow": {
       "enabled": true,
-      "color": "#000000",
+      "color": "#00ff88",
       "blur": 24,
       "x": 0,
       "y": 8,
-      "opacity": 0.4
+      "opacity": 0.35
     },
-    "keyStyle": "flat",
+    "keyStyle": "gradient",
+    "keyColor": "#1a1a2e",
+    "keyPressedColor": "#00ff88",
+    "keyHoverColor": "#2a2a4e",
+    "borderColor": "#00e5a0",
+    "keyBorderWidth": 2,
     "keyGradient": {
-      "enabled": false,
-      "angle": 180,
-      "startColor": "#3a3a3a",
-      "endColor": "#2b2b2b"
+      "enabled": true,
+      "startColor": "#1a2a3a",
+      "endColor": "#0a1a2a",
+      "angle": 180
     },
-    "keyBorderWidth": 1,
     "keyShadow": {
       "enabled": true,
-      "color": "#000000",
+      "color": "#00ff88",
       "blur": 12,
       "x": 0,
       "y": 4,
-      "opacity": 0.3
-    }
-  },
-  "label": {
-    "fontFamily": "Inter",
-    "fontSize": 15,
-    "bold": false,
-    "italic": false,
-    "letterSpacing": 0.5,
-    "fontWeight": "Medium",
-    "uppercase": false
+      "opacity": 0.4
+    },
+    "pressScale": 0.92,
+    "textColor": "#00ff88"
   },
   "layout": {
-    "rowSpacing": 12,
-    "keySpacing": 8,
+    "keyWidth": 72,
     "keyHeight": 72,
-    "keyWidth": 72
+    "keySpacing": 8,
+    "rowSpacing": 12
   },
-  "behavior": {
-    "pressAnimationMs": 60,
-    "longPressMs": 450
-  },
-  "features": {
-    "enableShadow": true,
-    "enableHover": true
+  "label": {
+    "fontFamily": "JetBrains Mono",
+    "fontSize": 15,
+    "bold": true,
+    "italic": false,
+    "letterSpacing": 0.5,
+    "uppercase": false,
+    "fontWeight": "Medium"
   }
 }

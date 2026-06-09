@@ -1,29 +1,60 @@
 {
   "visual": {
-    "keyColor": "#2b2b2b",
-    "keyPressedColor": "#3a3a3a",
-    "textColor": "#ffffff",
-    "borderColor": "#33ffffff",
-    "radius": 18,
-    "pressScale": 0.93,
-    "hoverOpacity": 0.08,
-    "background": "#121212"
+    "background": "#121212",
+    "backgroundOpacity": 1.0,
+    "radius": 10,
+    "backgroundGradient": {
+      "enabled": false,
+      "angle": 135,
+      "startColor": "#1a1a2e",
+      "endColor": "#16213e"
+    },
+    "backgroundImage": "qrc:/qt/qml/Kittyboard/themes/mountain.jpg",
+    "backgroundImageOpacity": 0.3,
+    "shadow": {
+      "enabled": true,
+      "color": "#000000",
+      "blur": 32,
+      "x": 0,
+      "y": 8,
+      "opacity": 0.5
+    },
+    "keyStyle": "flat",
+    "keyColor": "#1e1e1e",
+    "keyPressedColor": "#333333",
+    "keyHoverColor": "#2a2a2a",
+    "borderColor": "#444444",
+    "keyBorderWidth": 1,
+    "keyGradient": {
+      "enabled": false,
+      "startColor": "#2a2a2a",
+      "endColor": "#1a1a1a",
+      "angle": 180
+    },
+    "keyShadow": {
+      "enabled": true,
+      "color": "#000000",
+      "blur": 8,
+      "x": 0,
+      "y": 2,
+      "opacity": 0.4
+    },
+    "pressScale": 0.95,
+    "textColor": "#e0e0e0"
   },
-
   "layout": {
-    "rowSpacing": 12,
-    "keySpacing": 8,
+    "keyWidth": 72,
     "keyHeight": 72,
-    "keyWidth": 72
+    "keySpacing": 8,
+    "rowSpacing": 12
   },
-
-  "behavior": {
-    "pressAnimationMs": 60,
-    "longPressMs": 450
-  },
-
-  "features": {
-    "enableShadow": true,
-    "enableHover": true
+  "label": {
+    "fontFamily": "Inter",
+    "fontSize": 15,
+    "bold": false,
+    "italic": false,
+    "letterSpacing": 0.5,
+    "uppercase": false,
+    "fontWeight": "Normal"
   }
 }
