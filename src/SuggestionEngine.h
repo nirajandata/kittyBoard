@@ -41,6 +41,10 @@ public:
                         int maxResults = 5,
                         int maxEditDist = 2) const;
 
+    QStringList suggestNextWords(const QString &prevWord,
+                                 const QString &prevWord2 = {},
+                                 int maxResults = 5) const;
+
 private:
     void collectSuggestions(const TrieNode *node,
                             const QString &prefix,

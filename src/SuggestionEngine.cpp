@@ -310,3 +310,58 @@ QStringList SuggestionEngine::suggest(const QString &prefix,
 
     return results;
 }
+
+QStringList SuggestionEngine::suggestNextWords(const QString &prevWord,
+                                               const QString &prevWord2,
+                                               int maxResults) const
+{
+    QString prev = prevWord.toLower().trimmed();
+    QString prev2 = prevWord2.toLower().trimmed();
+
+    QMap<QString, uint32_t> scores;
+
+    auto bigramIt = m_bigrams.find(prev);
+    if (bigramIt != m_bigrams.end()) {
+        for (auto it = bigramIt.value().begin(); it != bigramIt.value().end(); ++it)
+            scores[it.key()] += it.value() * 10;
+    }
+
+    if (!prev2.isEmpty()) {
+        auto triIt1 = m_trigrams.find(prev2);
+        if (triIt1 != m_trigrams.end()) {
+            auto triIt2 = triIt1.value().find(prev);
+            if (triIt2 != triIt1.value().end()) {
+                for (auto it = triIt2.value().begin(); it != triIt2.value().end(); ++it)
+                    scores[it.key()] += it.value() * 20;
+            }
+        }
+    }
+
+    if (scores.isEmpty()) {
+        QList<WordEntry> all;
+        collectSuggestions(m_root.get(), QString(), all);
+        std::sort(all.begin(), all.end(), [](const WordEntry &a, const WordEntry &b) {
+            return a.frequency > b.frequency;
+        });
+        QStringList results;
+        for (int i = 0; i < std::min(maxResults, static_cast<int>(all.size())); ++i)
+            results.append(all.at(i).word);
+        return results;
+    }
+
+    QList<WordEntry> candidates;
+    candidates.reserve(scores.size());
+    for (auto it = scores.begin(); it != scores.end(); ++it)
+        candidates.append({it.key(), it.value(), 0});
+
+    std::sort(candidates.begin(), candidates.end(), [](const WordEntry &a, const WordEntry &b) {
+        return a.frequency > b.frequency;
+    });
+
+    QStringList results;
+    results.reserve(maxResults);
+    for (int i = 0; i < std::min(static_cast<int>(candidates.size()), maxResults); ++i)
+        results.append(candidates.at(i).word);
+
+    return results;
+}

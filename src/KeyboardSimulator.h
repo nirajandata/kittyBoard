@@ -51,4 +51,5 @@ private:
     SuggestionEngine m_engine;
     QStringList m_suggestions;
     QString m_userDataPath;
+    QString m_prevWord2;
 };

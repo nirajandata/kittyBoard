@@ -317,7 +317,7 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: t.layout?.keySpacing ?? 8
                 Repeater {
-                    model: ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
+                    model: ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]
                     KeyButton {
                         label: modelData
                         isCapsLock: mainWindow.capsLock
@@ -338,7 +338,7 @@ Window {
                 }
 
                 Repeater {
-                    model: ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
+                    model: ["a", "s", "d", "f", "g", "h", "j", "k", "l"]
                     KeyButton {
                         label: modelData
                         isCapsLock: mainWindow.capsLock
@@ -350,7 +350,7 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: t.layout?.keySpacing ?? 8
                 Repeater {
-                    model: ["Z", "X", "C", "V", "B", "N", "M"]
+                    model: ["z", "x", "c", "v", "b", "n", "m"]
                     KeyButton {
                         label: modelData
                         isCapsLock: mainWindow.capsLock
