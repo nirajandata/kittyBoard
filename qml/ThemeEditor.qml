@@ -223,40 +223,30 @@ Rectangle {
                         SectionTitle {
                             text: "Background"
                         }
-                        ColorRow {
-                            label: "Base Color"
-                            path: "visual.background"
-                            defaultValue: "#121212"
-                        }
                         SliderRow {
                             label: "Opacity"
-                            path: "visual.backgroundOpacity"
+                            path: "visual.backgroundImageOpacity"
                             min: 0
                             max: 1
-                            defaultValue: 1
                             decimals: 2
                         }
                         ToggleRow {
                             label: "Gradient"
                             path: "visual.backgroundGradient.enabled"
-                            defaultValue: false
                         }
                         ColorRow {
                             label: "Gradient Start"
                             path: "visual.backgroundGradient.startColor"
-                            defaultValue: "#1a1a2e"
                         }
                         ColorRow {
                             label: "Gradient End"
                             path: "visual.backgroundGradient.endColor"
-                            defaultValue: "#16213e"
                         }
                         SliderRow {
                             label: "Gradient Angle"
                             path: "visual.backgroundGradient.angle"
                             min: 0
                             max: 360
-                            defaultValue: 135
                         }
 
                         SectionTitle {
@@ -265,40 +255,34 @@ Rectangle {
                         ToggleRow {
                             label: "Enable Shadow"
                             path: "visual.shadow.enabled"
-                            defaultValue: true
                         }
                         ColorRow {
                             label: "Shadow Color"
                             path: "visual.shadow.color"
-                            defaultValue: "#000000"
                         }
                         SliderRow {
                             label: "Blur"
                             path: "visual.shadow.blur"
                             min: 0
                             max: 64
-                            defaultValue: 24
                         }
                         SliderRow {
                             label: "X Offset"
                             path: "visual.shadow.x"
                             min: -32
                             max: 32
-                            defaultValue: 0
                         }
                         SliderRow {
                             label: "Y Offset"
                             path: "visual.shadow.y"
                             min: -32
                             max: 32
-                            defaultValue: 8
                         }
                         SliderRow {
                             label: "Strength"
                             path: "visual.shadow.opacity"
                             min: 0
                             max: 1
-                            defaultValue: 0.4
                             decimals: 2
                         }
                     }
@@ -315,7 +299,6 @@ Rectangle {
                             label: "Key Style"
                             path: "visual.keyStyle"
                             options: ["flat", "gradient", "dish"]
-                            defaultValue: "flat"
                         }
 
                         SectionTitle {
@@ -324,36 +307,30 @@ Rectangle {
                         ColorRow {
                             label: "Key Color"
                             path: "visual.keyColor"
-                            defaultValue: "#2b2b2b"
                         }
                         ColorRow {
                             label: "Pressed"
                             path: "visual.keyPressedColor"
-                            defaultValue: "#3a3a3a"
                         }
                         ColorRow {
                             label: "Hover"
                             path: "visual.keyHoverColor"
-                            defaultValue: "#353535"
                         }
                         ColorRow {
                             label: "Border"
                             path: "visual.borderColor"
-                            defaultValue: "#33ffffff"
                         }
                         SliderRow {
                             label: "Border Width"
                             path: "visual.keyBorderWidth"
                             min: 0
                             max: 8
-                            defaultValue: 1
                         }
                         SliderRow {
                             label: "Roundness"
                             path: "visual.radius"
                             min: 0
                             max: 40
-                            defaultValue: 18
                         }
 
                         SectionTitle {
@@ -362,24 +339,20 @@ Rectangle {
                         ToggleRow {
                             label: "Enable"
                             path: "visual.keyGradient.enabled"
-                            defaultValue: false
                         }
                         ColorRow {
                             label: "Start"
                             path: "visual.keyGradient.startColor"
-                            defaultValue: "#3a3a3a"
                         }
                         ColorRow {
                             label: "End"
                             path: "visual.keyGradient.endColor"
-                            defaultValue: "#2b2b2b"
                         }
                         SliderRow {
                             label: "Angle"
                             path: "visual.keyGradient.angle"
                             min: 0
                             max: 360
-                            defaultValue: 180
                         }
 
                         SectionTitle {
@@ -388,40 +361,34 @@ Rectangle {
                         ToggleRow {
                             label: "Enable"
                             path: "visual.keyShadow.enabled"
-                            defaultValue: true
                         }
                         ColorRow {
                             label: "Color"
                             path: "visual.keyShadow.color"
-                            defaultValue: "#000000"
                         }
                         SliderRow {
                             label: "Blur"
                             path: "visual.keyShadow.blur"
                             min: 0
                             max: 48
-                            defaultValue: 12
                         }
                         SliderRow {
                             label: "X Offset"
                             path: "visual.keyShadow.x"
                             min: -16
                             max: 16
-                            defaultValue: 0
                         }
                         SliderRow {
                             label: "Y Offset"
                             path: "visual.keyShadow.y"
                             min: -16
                             max: 16
-                            defaultValue: 4
                         }
                         SliderRow {
                             label: "Strength"
                             path: "visual.keyShadow.opacity"
                             min: 0
                             max: 1
-                            defaultValue: 0.3
                             decimals: 2
                         }
 
@@ -433,35 +400,30 @@ Rectangle {
                             path: "layout.keyWidth"
                             min: 40
                             max: 120
-                            defaultValue: 72
                         }
                         SliderRow {
                             label: "Key Height"
                             path: "layout.keyHeight"
                             min: 40
                             max: 120
-                            defaultValue: 72
                         }
                         SliderRow {
                             label: "Key Gap"
                             path: "layout.keySpacing"
                             min: 0
                             max: 24
-                            defaultValue: 8
                         }
                         SliderRow {
                             label: "Row Gap"
                             path: "layout.rowSpacing"
                             min: 0
                             max: 32
-                            defaultValue: 12
                         }
                         SliderRow {
                             label: "Press Scale"
                             path: "visual.pressScale"
                             min: 0.5
                             max: 1.0
-                            defaultValue: 0.93
                             decimals: 2
                         }
                     }
@@ -474,40 +436,35 @@ Rectangle {
                         SectionTitle {
                             text: "Font"
                         }
-                        TextRow {
+                        DropdownRow {
                             label: "Family"
                             path: "label.fontFamily"
-                            defaultValue: "Inter"
+                            options: ["Inter", "Roboto", "JetBrains Mono", "SF Pro", "System OS"]
                         }
                         SliderRow {
                             label: "Size"
                             path: "label.fontSize"
                             min: 8
                             max: 32
-                            defaultValue: 15
                         }
                         ToggleRow {
                             label: "Bold"
                             path: "label.bold"
-                            defaultValue: false
                         }
                         ToggleRow {
                             label: "Italic"
                             path: "label.italic"
-                            defaultValue: false
                         }
                         SliderRow {
                             label: "Letter Spacing"
                             path: "label.letterSpacing"
                             min: -2
                             max: 8
-                            defaultValue: 0.5
                             decimals: 1
                         }
                         ToggleRow {
                             label: "Uppercase"
                             path: "label.uppercase"
-                            defaultValue: false
                         }
 
                         SectionTitle {
@@ -517,7 +474,6 @@ Rectangle {
                             label: "Weight"
                             path: "label.fontWeight"
                             options: ["Thin", "Light", "Normal", "Medium", "Bold", "Black"]
-                            defaultValue: "Medium"
                         }
 
                         SectionTitle {
@@ -526,7 +482,6 @@ Rectangle {
                         ColorRow {
                             label: "Text Color"
                             path: "visual.textColor"
-                            defaultValue: "#ffffff"
                         }
                     }
                 }
@@ -554,7 +509,7 @@ Rectangle {
                         id: saveArea
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: ThemeManager.saveCurrentTheme("Kittyboard/themes/neon.json")
+                        onClicked: ThemeManager.saveCurrentTheme()
                     }
                 }
 
@@ -574,7 +529,7 @@ Rectangle {
                         id: resetArea
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: ThemeManager.loadTheme(":/qt/qml/Kittyboard/themes/neon.json")
+                        onClicked: ThemeManager.loadTheme(ThemeManager.currentTheme)
                     }
                 }
             }
@@ -844,6 +799,127 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: optionsPopup
+        anchors.fill: parent
+        color: "#aa000000"
+        visible: false
+        z: 200
+
+        property string targetPath: ""
+        property string labelTitle: ""
+        property var optionsList: []
+        property string defaultValue: ""
+
+        function open(title, path, options, def) {
+            labelTitle = title;
+            targetPath = path;
+            optionsList = options;
+            defaultValue = def;
+            visible = true;
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: optionsPopup.visible = false
+        }
+
+        Rectangle {
+            id: optPopupCard
+            width: 280
+            height: Math.min(400, optPopupCol.implicitHeight + 40)
+            anchors.centerIn: parent
+            radius: 20
+            color: "#252525"
+            border.color: "#444"
+            border.width: 1
+
+            MouseArea {
+                anchors.fill: parent
+            }
+
+            Column {
+                id: optPopupCol
+                anchors.fill: parent
+                anchors.margins: 20
+                spacing: 12
+
+                Row {
+                    width: parent.width
+                    Text {
+                        text: optionsPopup.labelTitle
+                        color: "#fff"
+                        font.pixelSize: 16
+                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    Item {
+                        width: parent.width - 100
+                        height: 1
+                    }
+                    Rectangle {
+                        width: 32
+                        height: 32
+                        radius: 8
+                        color: "#333"
+                        Text {
+                            anchors.centerIn: parent
+                            text: "✕"
+                            color: "#fff"
+                            font.pixelSize: 14
+                            font.bold: true
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: optionsPopup.visible = false
+                        }
+                    }
+                }
+
+                Flickable {
+                    width: parent.width
+                    height: Math.min(300, optItemsCol.implicitHeight)
+                    contentHeight: optItemsCol.implicitHeight
+                    clip: true
+
+                    Column {
+                        id: optItemsCol
+                        width: parent.width
+                        spacing: 6
+
+                        Repeater {
+                            model: optionsPopup.optionsList
+                            Rectangle {
+                                width: parent.width
+                                height: 36
+                                radius: 8
+                                color: editor.tv(optionsPopup.targetPath, optionsPopup.defaultValue) === modelData ? "#00e5a0" : (optItemArea.containsMouse ? "#333" : "#2a2a2a")
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: modelData
+                                    color: editor.tv(optionsPopup.targetPath, optionsPopup.defaultValue) === modelData ? "#000" : "#fff"
+                                    font.bold: true
+                                    font.pixelSize: 13
+                                }
+
+                                MouseArea {
+                                    id: optItemArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: {
+                                        ThemeManager.setThemeProperty(optionsPopup.targetPath, modelData);
+                                        optionsPopup.visible = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     component SectionTitle: Text {
         color: "#00e5a0"
         font.pixelSize: 12
@@ -928,7 +1004,7 @@ Rectangle {
         property string label: ""
         property string path: ""
         property real min: 0
-        property real max: 100
+        property real max: 1
         property real defaultValue: 0
         property int decimals: 0
         spacing: 12
@@ -1146,6 +1222,55 @@ Rectangle {
                 color: "#fff"
                 font.pixelSize: 13
                 onEditingFinished: ThemeManager.setThemeProperty(path, text)
+            }
+        }
+    }
+
+    component DropdownRow: Row {
+        property string label: ""
+        property string path: ""
+        property var options: []
+        property string defaultValue: ""
+        spacing: 12
+        height: 36
+
+        Text {
+            text: label
+            color: "#ccc"
+            width: 120
+            font.pixelSize: 13
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Rectangle {
+            width: 200
+            height: 32
+            radius: 8
+            color: "#2a2a2a"
+            border.color: "#444"
+            anchors.verticalCenter: parent.verticalCenter
+
+            Text {
+                text: String(editor.tv(path, defaultValue))
+                color: "#fff"
+                font.pixelSize: 13
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+                text: "▼"
+                color: "#888"
+                font.pixelSize: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: optionsPopup.open(label, path, options, defaultValue)
             }
         }
     }

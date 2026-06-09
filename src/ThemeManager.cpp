@@ -10,6 +10,7 @@ QVariantMap ThemeManager::theme() const { return m_theme; }
 
 void ThemeManager::loadTheme(const QString &path) {
     QFile file(path);
+    currentThemePath = path;
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Cannot open theme:" << path;
         return;
@@ -19,10 +20,11 @@ void ThemeManager::loadTheme(const QString &path) {
     emit themeChanged();
 }
 
-void ThemeManager::saveCurrentTheme(const QString &path) {
-    QFile file(path);
+void ThemeManager::saveCurrentTheme()
+{
+    QFile file(currentThemePath);
     if (!file.open(QIODevice::WriteOnly)) {
-        qWarning() << "Cannot write theme:" << path;
+        qWarning() << "Cannot write theme:" << currentThemePath;
         return;
     }
     QJsonDocument doc(QJsonObject::fromVariantMap(m_theme));
