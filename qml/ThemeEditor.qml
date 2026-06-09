@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Dialogs
 
 Rectangle {
     id: editor
@@ -486,21 +487,40 @@ Rectangle {
                     }
                 }
             }
-
             Row {
                 width: parent.width
                 height: 50
-                spacing: 12
+                spacing: 10
                 topPadding: 8
 
                 Rectangle {
-                    width: parent.width / 2 - 6
+                    width: (parent.width - 20) / 3
+                    height: 40
+                    radius: 10
+                    color: loadArea.containsMouse ? "#444" : "#333"
+                    Text {
+                        anchors.centerIn: parent
+                        text: "Load"
+                        color: "#fff"
+                        font.bold: true
+                        font.pixelSize: 14
+                    }
+                    MouseArea {
+                        id: loadArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: themeFileDialog.open()
+                    }
+                }
+
+                Rectangle {
+                    width: (parent.width - 20) / 3
                     height: 40
                     radius: 10
                     color: saveArea.containsMouse ? "#00c48c" : "#00e5a0"
                     Text {
                         anchors.centerIn: parent
-                        text: "Save Theme"
+                        text: "Save"
                         color: "#000"
                         font.bold: true
                         font.pixelSize: 14
@@ -514,7 +534,7 @@ Rectangle {
                 }
 
                 Rectangle {
-                    width: parent.width / 2 - 6
+                    width: (parent.width - 20) / 3
                     height: 40
                     radius: 10
                     color: resetArea.containsMouse ? "#444" : "#333"
@@ -529,7 +549,7 @@ Rectangle {
                         id: resetArea
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: ThemeManager.loadTheme(ThemeManager.currentTheme)
+                        onClicked: ThemeManager.resetTheme()
                     }
                 }
             }
@@ -918,6 +938,14 @@ Rectangle {
                 }
             }
         }
+    }
+
+    FileDialog {
+        id: themeFileDialog
+        title: "Load Theme"
+        fileMode: FileDialog.OpenFile
+        nameFilters: ["JSON files (*.json)"]
+        onAccepted: ThemeManager.loadTheme(selectedFile.toString())
     }
 
     component SectionTitle: Text {

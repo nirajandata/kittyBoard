@@ -13,7 +13,7 @@ Window {
 
     property real appX: 100
     property real appY: 100
-    property var t: ({})
+    property var t: ThemeManager.theme ?? ({})
     property bool capsLock: false
 
     property real dragStartAppX: 0

@@ -1,7 +1,5 @@
 {
   "visual": {
-    "background": "#121212",
-    "backgroundOpacity": 1.0,
     "radius": 10,
     "backgroundGradient": {
       "enabled": false,
