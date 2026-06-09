@@ -111,7 +111,7 @@ Rectangle {
     Text {
         id: labelText
         anchors.centerIn: parent
-        text: fontUppercase ? root.label.toUpperCase() : root.label
+        text: fontUppercase || isCapsLock ? root.label.toUpperCase() : root.label
         color: textColor
         font.family: fontFamily
         font.pixelSize: fontSize
