@@ -1,53 +1,61 @@
 #pragma once
 
+#include <QList>
+#include <QMap>
+#include <QSet>
 #include <QString>
 #include <QStringList>
-#include <unordered_map>
+#include <map>
 #include <memory>
-#include <cstdint>
+#include <vector>
 
-struct WordEntry {
+struct TrieNode
+{
+    std::map<QChar, std::unique_ptr<TrieNode>> children;
+    bool isTerminal = false;
+    uint32_t frequency = 0;
+};
+
+struct WordEntry
+{
     QString word;
-    uint32_t frequency;
+    uint32_t frequency = 0;
+    int editDistance = 0;
 };
 
-struct QCharHash {
-    std::size_t operator()(QChar c) const noexcept {
-        return std::hash<char16_t>{}(c.unicode());
-    }
-};
-
-struct QStringHash {
-    std::size_t operator()(const QString &s) const noexcept {
-        return std::hash<std::u16string>{}(s.toStdU16String());
-    }
-};
-
-using BigramMap = std::unordered_map<QString, std::unordered_map<QString, uint32_t, QStringHash>, QStringHash>;
-
-class SuggestionEngine {
+class SuggestionEngine
+{
 public:
     SuggestionEngine();
 
+    void insert(const QString &word, uint32_t frequency);
     void loadDictionary(const QString &path);
+
     void loadUserData(const QString &path);
     void saveUserData(const QString &path) const;
+    void learnWord(const QString &word, const QString &prevWord = {}, const QString &prevWord2 = {});
 
-    void learnWord(const QString &word, const QString &prevWord = QString());
-    QStringList suggest(const QString &prefix, const QString &prevWord = QString(), int maxResults = 3) const;
+    QStringList suggest(const QString &prefix,
+                        const QString &prevWord = {},
+                        const QString &prevWord2 = {},
+                        int maxResults = 5,
+                        int maxEditDist = 2) const;
 
 private:
-    struct TrieNode {
-        std::unordered_map<QChar, std::unique_ptr<TrieNode>, QCharHash> children;
-        uint32_t frequency = 0;
-        bool isTerminal = false;
-    };
-
-    void insert(const QString &word, uint32_t frequency);
-    void collectSuggestions(const TrieNode *node, const QString &prefix,
+    void collectSuggestions(const TrieNode *node,
+                            const QString &prefix,
                             QList<WordEntry> &results) const;
 
+    void collectFuzzy(const TrieNode *node,
+                      QChar ch,
+                      const QString &query,
+                      const QString &currentWord,
+                      std::vector<int> prevRow,
+                      int maxDist,
+                      QList<WordEntry> &results) const;
+
     std::unique_ptr<TrieNode> m_root;
-    BigramMap m_bigrams;
+    QMap<QString, QMap<QString, uint32_t>> m_bigrams;
+    QMap<QString, QMap<QString, QMap<QString, uint32_t>>> m_trigrams;
     QString m_userDataPath;
 };

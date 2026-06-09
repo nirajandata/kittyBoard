@@ -44,8 +44,8 @@ QStringList KeyboardSimulator::suggestions() const {
 
 void KeyboardSimulator::updateSuggestions() {
     QStringList next = m_currentWord.isEmpty()
-        ? QStringList{}
-        : m_engine.suggest(m_currentWord, m_previousWord, 3);
+    ? QStringList{}
+    : m_engine.suggest(m_currentWord, m_previousWord, "", 3);
 
     if (next != m_suggestions) {
         m_suggestions = next;
