@@ -8,13 +8,27 @@
 #include <unistd.h>
 
 static const QHash<QString, int> keyCodeMap
-    = {{"a", 30},     {"b", 48},         {"c", 46},     {"d", 32},    {"e", 18}, {"f", 33},
-       {"g", 34},     {"h", 35},         {"i", 23},     {"j", 36},    {"k", 37}, {"l", 38},
-       {"m", 50},     {"n", 49},         {"o", 24},     {"p", 25},    {"q", 16}, {"r", 19},
-       {"s", 31},     {"t", 20},         {"u", 22},     {"v", 47},    {"w", 17}, {"x", 45},
-       {"y", 21},     {"z", 44},         {"0", 11},     {"1", 2},     {"2", 3},  {"3", 4},
-       {"4", 5},      {"5", 6},          {"6", 7},      {"7", 8},     {"8", 9},  {"9", 10},
-       {"space", 57}, {"backspace", 14}, {"enter", 28}, {"shift", 42}};
+    = {{"a", 30},     {"b", 48},    {"c", 46},     {"d", 32},         {"e", 18},
+       {"f", 33},     {"g", 34},    {"h", 35},     {"i", 23},         {"j", 36},
+       {"k", 37},     {"l", 38},    {"m", 50},     {"n", 49},         {"o", 24},
+       {"p", 25},     {"q", 16},    {"r", 19},     {"s", 31},         {"t", 20},
+       {"u", 22},     {"v", 47},    {"w", 17},     {"x", 45},         {"y", 21},
+       {"z", 44},     {"0", 11},    {"1", 2},      {"2", 3},          {"3", 4},
+       {"4", 5},      {"5", 6},     {"6", 7},      {"7", 8},          {"8", 9},
+       {"9", 10},     {"`", 41},    {"-", 12},     {"=", 13},         {"[", 26},
+       {"]", 27},     {"\\", 43},   {";", 39},     {"'", 40},         {",", 51},
+       {".", 52},     {"/", 53},    {"space", 57}, {"backspace", 14}, {"enter", 28},
+       {"shift", 42}, {"tab", 15},  {"esc", 1},    {"escape", 1},     {"delete", 111},
+       {"del", 111},  {"ctrl", 29}, {"alt", 56},   {"super", 125},    {"meta", 125},
+       {"win", 125},  {"up", 103},  {"down", 108}, {"left", 105},     {"right", 106}};
+
+static const QHash<QString, QString> shiftSymbolMap = {{"!", "1"}, {"@", "2"},  {"#", "3"},
+                                                       {"$", "4"}, {"%", "5"},  {"^", "6"},
+                                                       {"&", "7"}, {"*", "8"},  {"(", "9"},
+                                                       {")", "0"}, {"_", "-"},  {"+", "="},
+                                                       {"{", "["}, {"}", "]"},  {"|", "\\"},
+                                                       {":", ";"}, {"\"", "'"}, {"<", ","},
+                                                       {">", "."}, {"?", "/"},  {"~", "`"}};
 
 KeyboardSimulator::KeyboardSimulator(QObject *parent)
     : QObject(parent)
@@ -66,6 +80,7 @@ void KeyboardSimulator::commitCurrentWord()
         m_engine.learnWord(m_currentWord, m_previousWord, m_prevWord2);
         m_prevWord2 = m_previousWord;
         m_previousWord = m_currentWord;
+        m_engine.saveUserData(m_userDataPath);
     }
     m_currentWord.clear();
     m_currentWordLength = 0;
@@ -104,12 +119,23 @@ void KeyboardSimulator::sendKeyCode(int keyCode)
 
 void KeyboardSimulator::sendKey(const QString &key)
 {
-    QString lower = key.toLower();
-    bool isUpper = (key != lower);
+    QString k = key;
+    bool needsShift = false;
+
+    auto shiftIt = shiftSymbolMap.find(key);
+    if (shiftIt != shiftSymbolMap.end()) {
+        k = shiftIt.value();
+        needsShift = true;
+    }
+
+    QString lower = k.toLower();
+    bool isUpper = (k != lower) || needsShift;
 
     auto it = keyCodeMap.find(lower);
-    if (it == keyCodeMap.end())
+    if (it == keyCodeMap.end()) {
+        qWarning() << "Unknown key:" << key;
         return;
+    }
 
     int code = it.value();
 
@@ -124,8 +150,13 @@ void KeyboardSimulator::sendKey(const QString &key)
         sendKeyCode(code);
     }
 
-    m_currentWordLength++;
-    m_currentWord += lower;
+    bool isWordChar = lower.length() == 1
+                      && ((lower[0] >= 'a' && lower[0] <= 'z')
+                          || (lower[0] >= '0' && lower[0] <= '9'));
+    if (isWordChar) {
+        m_currentWordLength++;
+        m_currentWord += lower;
+    }
     updateSuggestions();
 }
 
@@ -152,8 +183,35 @@ void KeyboardSimulator::sendEnter()
 {
     sendKeyCode(keyCodeMap.value("enter"));
     commitCurrentWord();
-    //m_previousWord.clear();
     updateSuggestions();
+}
+
+void KeyboardSimulator::sendTab()
+{
+    sendKeyCode(keyCodeMap.value("tab"));
+}
+
+void KeyboardSimulator::sendEscape()
+{
+    sendKeyCode(keyCodeMap.value("esc"));
+}
+
+void KeyboardSimulator::sendDelete()
+{
+    sendKeyCode(keyCodeMap.value("delete"));
+}
+
+void KeyboardSimulator::sendArrow(const QString &direction)
+{
+    QString d = direction.toLower();
+    if (d == "up")
+        sendKeyCode(103);
+    else if (d == "down")
+        sendKeyCode(108);
+    else if (d == "left")
+        sendKeyCode(105);
+    else if (d == "right")
+        sendKeyCode(106);
 }
 
 void KeyboardSimulator::applySuggestion(const QString &word)
@@ -176,5 +234,6 @@ void KeyboardSimulator::applySuggestion(const QString &word)
     m_currentWordLength = 0;
 
     sendKeyCode(keyCodeMap.value("space"));
+    m_engine.saveUserData(m_userDataPath);
     updateSuggestions();
 }

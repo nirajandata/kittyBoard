@@ -3,10 +3,10 @@ import QtQuick.Window
 
 Window {
     id: mainWindow
-    width: 900
-    height: 480
-    minimumWidth: 600
-    minimumHeight: 380
+    width: 1200
+    height: 560
+    minimumWidth: 800
+    minimumHeight: 420
     visible: false
     title: "Kittyboard"
     flags: Qt.FramelessWindowHint
@@ -20,17 +20,7 @@ Window {
     property real dragStartAppY: 0
     property var dragStartGlobal: Qt.point(0, 0)
 
-    Connections {
-        target: ThemeManager
-        function onThemeChanged() {
-            t = ThemeManager.theme;
-        }
-    }
-
     Component.onCompleted: {
-        if (ThemeManager.theme && Object.keys(ThemeManager.theme).length > 0) {
-            t = ThemeManager.theme;
-        }
         KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
     }
 
@@ -310,18 +300,134 @@ Window {
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: suggestionBar.bottom
-            anchors.topMargin: 8
+            anchors.topMargin: 6
             spacing: t.layout?.rowSpacing ?? 12
 
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: t.layout?.keySpacing ?? 8
-                Repeater {
-                    model: ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]
-                    KeyButton {
-                        label: modelData
-                        isCapsLock: mainWindow.capsLock
-                    }
+
+                KeyButton {
+                    label: "`"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "1"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "2"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "3"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "4"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "5"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "6"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "7"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "8"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "9"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "0"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "-"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "="
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "Backspace"
+                    width: (t.layout?.keyWidth ?? 72) * 1.5
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendBackspace()
+                }
+            }
+
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: t.layout?.keySpacing ?? 8
+
+                KeyButton {
+                    label: "Tab"
+                    width: (t.layout?.keyWidth ?? 72) * 1.25
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendTab()
+                }
+                KeyButton {
+                    label: "q"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "w"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "e"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "r"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "t"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "y"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "u"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "i"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "o"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "p"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "["
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "]"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "\\"
+                    isCapsLock: mainWindow.capsLock
                 }
             }
 
@@ -331,30 +437,60 @@ Window {
 
                 KeyButton {
                     label: "Caps"
-                    width: 100
+                    width: (t.layout?.keyWidth ?? 72) * 1.5
                     autoSend: false
                     isCapsActive: mainWindow.capsLock
                     onKeyPressed: mainWindow.capsLock = !mainWindow.capsLock
                 }
-
-                Repeater {
-                    model: ["a", "s", "d", "f", "g", "h", "j", "k", "l"]
-                    KeyButton {
-                        label: modelData
-                        isCapsLock: mainWindow.capsLock
-                    }
+                KeyButton {
+                    label: "a"
+                    isCapsLock: mainWindow.capsLock
                 }
-            }
-
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: t.layout?.keySpacing ?? 8
-                Repeater {
-                    model: ["z", "x", "c", "v", "b", "n", "m"]
-                    KeyButton {
-                        label: modelData
-                        isCapsLock: mainWindow.capsLock
-                    }
+                KeyButton {
+                    label: "s"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "d"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "f"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "g"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "h"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "j"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "k"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "l"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: ";"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "'"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "Enter"
+                    width: (t.layout?.keyWidth ?? 72) * 2
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendEnter()
                 }
             }
 
@@ -363,27 +499,113 @@ Window {
                 spacing: t.layout?.keySpacing ?? 8
 
                 KeyButton {
+                    label: "Shift"
+                    width: (t.layout?.keyWidth ?? 72) * 2
+                    autoSend: false
+                    onKeyPressed: mainWindow.capsLock = !mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "z"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "x"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "c"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "v"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "b"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "n"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "m"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: ","
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "."
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "/"
+                    isCapsLock: mainWindow.capsLock
+                }
+                KeyButton {
+                    label: "Shift"
+                    width: (t.layout?.keyWidth ?? 72) * 2
+                    autoSend: false
+                    onKeyPressed: mainWindow.capsLock = !mainWindow.capsLock
+                }
+            }
+
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: t.layout?.keySpacing ?? 8
+
+                KeyButton {
+                    label: "Ctrl"
+                    width: (t.layout?.keyWidth ?? 72) * 1.25
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendKey("ctrl")
+                }
+                KeyButton {
+                    label: "Alt"
+                    width: (t.layout?.keyWidth ?? 72) * 1.25
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendKey("alt")
+                }
+                KeyButton {
                     label: "Space"
-                    width: 300
+                    width: (t.layout?.keyWidth ?? 72) * 4.5
                     height: t.layout?.keyHeight ?? 72
                     autoSend: false
                     onKeyPressed: KeyboardSimulator.sendSpace()
                 }
-
+                KeyButton {
+                    label: "Alt"
+                    width: (t.layout?.keyWidth ?? 72) * 1.25
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendKey("alt")
+                }
+                KeyButton {
+                    label: "Super"
+                    width: (t.layout?.keyWidth ?? 72) * 1.25
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendKey("super")
+                }
                 KeyButton {
                     label: "←"
-                    width: t.layout?.keyWidth ?? 72
-                    height: t.layout?.keyHeight ?? 72
                     autoSend: false
-                    onKeyPressed: KeyboardSimulator.sendBackspace()
+                    onKeyPressed: KeyboardSimulator.sendArrow("left")
                 }
-
                 KeyButton {
-                    label: "Enter"
-                    width: 150
-                    height: t.layout?.keyHeight ?? 72
+                    label: "↓"
                     autoSend: false
-                    onKeyPressed: KeyboardSimulator.sendEnter()
+                    onKeyPressed: KeyboardSimulator.sendArrow("down")
+                }
+                KeyButton {
+                    label: "↑"
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendArrow("up")
+                }
+                KeyButton {
+                    label: "→"
+                    autoSend: false
+                    onKeyPressed: KeyboardSimulator.sendArrow("right")
                 }
             }
         }

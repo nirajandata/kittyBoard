@@ -1,12 +1,13 @@
 #pragma once
 
 #include <QObject>
+#include <QPoint>
 #include <QString>
 #include <QStringList>
-#include <QPoint>
 #include "SuggestionEngine.h"
 
-class KeyboardSimulator : public QObject {
+class KeyboardSimulator : public QObject
+{
     Q_OBJECT
     Q_PROPERTY(QStringList suggestions READ suggestions NOTIFY suggestionsChanged)
 
@@ -19,6 +20,11 @@ public:
     Q_INVOKABLE void sendBackspace();
     Q_INVOKABLE void sendSpace();
     Q_INVOKABLE void sendEnter();
+
+    Q_INVOKABLE void sendTab();
+    Q_INVOKABLE void sendEscape();
+    Q_INVOKABLE void sendDelete();
+    Q_INVOKABLE void sendArrow(const QString &direction);
 
     Q_INVOKABLE void moveWindow(int x, int y);
     Q_INVOKABLE QPoint globalMouse() const;
@@ -34,7 +40,6 @@ signals:
     void moveWindowRequested(int x, int y);
     void suggestionsChanged();
 
-
 private:
     void sendKeyCode(int keyCode);
     void runYdotool(const QStringList &args);
@@ -47,9 +52,9 @@ private:
     int m_currentWordLength = 0;
     QString m_currentWord;
     QString m_previousWord;
+    QString m_prevWord2;
 
     SuggestionEngine m_engine;
     QStringList m_suggestions;
     QString m_userDataPath;
-    QString m_prevWord2;
 };
