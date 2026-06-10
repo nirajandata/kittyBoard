@@ -1,38 +1,32 @@
 # KittyBoard
 
-A fully customizable **Qt 6.11 + QML-based virtual keyboard engine** built for modern Wayland compositors. It features a theme-driven UI, modular key components, a JSON-based styling system, and system-wide input injection via `ydotool`.
+A hackable virtual keyboard for **Wayland**, built with **Qt 6 + QML**. It floats above your apps, looks however you want, and types into anything via `ydotool`.
 
-## Overview
-![Screenshot](assets/screenshot_1.png) <br>
-KittyBoard is a lightweight virtual keyboard built using **Qt Quick (QML)** and a **C++ backend**. Designed specifically for Wayland environments, it utilizes the `wlr-layer-shell` protocol to render as a persistent overlay surface without stealing focus from your active application.
+![Screenshot](assets/screenshot_1.png)
 
-## Features
+## What it is
 
-* **Wayland Native:** Uses `LayerShellQt` to run as an overlay surface.
-* **No Focus Stealing:** `KeyboardInteractivityNone` ensures your target application always keeps focus.
-* **System-Wide Input:** Injects keystrokes directly via `ydotool` (bypassing Wayland security restrictions on virtual inputs).
-* **Draggable Interface:** Custom coordinate tracking allows the layer-shell window to be moved freely across the screen.
-* **Caps Lock Support:** Fully functional Caps Lock state management affecting alphabet keys.
-* **Dynamic Theming:** JSON-based styling system (colors, layout, sizing, animations).
-* **Modular UI:** Clean QML architecture with reusable key components.
+KittyBoard sits on your screen as a persistent overlay using `wlr-layer-shell`. It never steals focus — it just sends keys to whatever window is actually active. Drag it anywhere, theme it to hell, and type without a physical keyboard.
 
-## Requirements
+## Why it exists
 
-### System Dependencies
-* **OS:** Linux (Wayland)
-* **Compositor:** wlroots-based (Sway, Hyprland) or KDE Plasma Wayland (must support `wlr-layer-shell`)
-* **Input Injection:** `ydotool` (must be installed and the daemon `ydotoold` must be running)
+- **Wayland-native** — layer-shell overlay, not a weird popup window
+- **No focus theft** — your target app stays active the whole time
+- **Actually types things** — `ydotool` injects keystrokes system-wide
+- **Draggable** — grab the handle and move it wherever
+- **Caps Lock** — works like you'd expect
+- **Themes** — everything is JSON: colors, sizing, shadows, fonts, animations
+- **Modular** — keys are self-contained QML components, easy to tweak
 
-### Build Dependencies
-* Qt 6.11 (with Quick and WaylandClient modules)
-* LayerShellQt (`layer-shell-qt`)
-* CMake 3.16+
-* C++17 compatible compiler
+## What you need
 
-## Building
+- **Linux + Wayland** (wlroots compositors like Sway/Hyprland, or KDE Plasma)
+- **`ydotool`** installed with `ydotoold` running
+- **Qt 6.11+** (Quick, WaylandClient)
+- **LayerShellQt**
+- **CMake 3.16+** and a C++17 compiler
 
-### Prerequisites
-Ensure all build dependencies are installed on your system:
+## Build it
 
 ```bash
 # Ubuntu/Debian
@@ -40,44 +34,14 @@ sudo apt install qt6-base-dev qt6-declarative-dev layer-shell-qt cmake build-ess
 
 # Arch
 sudo pacman -S qt6-base qt6-declarative layer-shell-qt cmake gcc
+
+# Clone and build
+git clone https://github.com/nirajandata/kittyBoard.git
+cd kittyBoard
+mkdir build && cd build
+cmake ..
+cmake --build .
+sudo cmake --install .   # optional
 ```
 
-### Build Instructions
-
-The project uses **CMake** as its build system. Follow these steps to build KittyBoard:
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/nirajandata/kittyBoard.git
-   cd kittyBoard
-   ```
-
-2. **Create a build directory:**
-   ```bash
-   mkdir build
-   cd build
-   ```
-
-3. **Configure the project with CMake:**
-   ```bash
-   cmake ..
-   ```
-
-4. **Build the project:**
-   ```bash
-   cmake --build .
-   ```
-   Or use the traditional `make`:
-   ```bash
-   make
-   ```
-
-5. **Install (optional):**
-   ```bash
-   cmake --install .
-   ```
-   Or with make:
-   ```bash
-   sudo make install
-   ```
-
+---
