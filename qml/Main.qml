@@ -16,9 +16,36 @@ Window {
     property var t: ThemeManager.theme ?? ({})
     property bool capsLock: false
 
+    property bool ctrlHeld: false
+    property bool altHeld: false
+    property bool superHeld: false
+
     property real dragStartAppX: 0
     property real dragStartAppY: 0
     property var dragStartGlobal: Qt.point(0, 0)
+
+    function activeModifiers() {
+        var mods = [];
+        if (ctrlHeld)
+            mods.push("ctrl");
+        if (altHeld)
+            mods.push("alt");
+        if (superHeld)
+            mods.push("super");
+        return mods;
+    }
+
+    function dispatchKey(key) {
+        var mods = activeModifiers();
+        if (mods.length > 0) {
+            KeyboardSimulator.sendChord(mods, key);
+            ctrlHeld = false;
+            altHeld = false;
+            superHeld = false;
+        } else {
+            KeyboardSimulator.sendKey(key);
+        }
+    }
 
     Component.onCompleted: {
         KeyboardSimulator.moveWindow(Math.round(mainWindow.appX), Math.round(mainWindow.appY));
@@ -310,54 +337,80 @@ Window {
                 KeyButton {
                     label: "`"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("`")
                 }
                 KeyButton {
                     label: "1"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("1")
                 }
                 KeyButton {
                     label: "2"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("2")
                 }
                 KeyButton {
                     label: "3"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("3")
                 }
                 KeyButton {
                     label: "4"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("4")
                 }
                 KeyButton {
                     label: "5"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("5")
                 }
                 KeyButton {
                     label: "6"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("6")
                 }
                 KeyButton {
                     label: "7"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("7")
                 }
                 KeyButton {
                     label: "8"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("8")
                 }
                 KeyButton {
                     label: "9"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("9")
                 }
                 KeyButton {
                     label: "0"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("0")
                 }
                 KeyButton {
                     label: "-"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("-")
                 }
                 KeyButton {
                     label: "="
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("=")
                 }
                 KeyButton {
                     label: "Backspace"
@@ -380,54 +433,80 @@ Window {
                 KeyButton {
                     label: "q"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "Q" : "q")
                 }
                 KeyButton {
                     label: "w"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "W" : "w")
                 }
                 KeyButton {
                     label: "e"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "E" : "e")
                 }
                 KeyButton {
                     label: "r"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "R" : "r")
                 }
                 KeyButton {
                     label: "t"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "T" : "t")
                 }
                 KeyButton {
                     label: "y"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "Y" : "y")
                 }
                 KeyButton {
                     label: "u"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "U" : "u")
                 }
                 KeyButton {
                     label: "i"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "I" : "i")
                 }
                 KeyButton {
                     label: "o"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "O" : "o")
                 }
                 KeyButton {
                     label: "p"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "P" : "p")
                 }
                 KeyButton {
                     label: "["
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("[")
                 }
                 KeyButton {
                     label: "]"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("]")
                 }
                 KeyButton {
                     label: "\\"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("\\")
                 }
             }
 
@@ -445,46 +524,68 @@ Window {
                 KeyButton {
                     label: "a"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "A" : "a")
                 }
                 KeyButton {
                     label: "s"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "S" : "s")
                 }
                 KeyButton {
                     label: "d"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "D" : "d")
                 }
                 KeyButton {
                     label: "f"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "F" : "f")
                 }
                 KeyButton {
                     label: "g"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "G" : "g")
                 }
                 KeyButton {
                     label: "h"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "H" : "h")
                 }
                 KeyButton {
                     label: "j"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "J" : "j")
                 }
                 KeyButton {
                     label: "k"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "K" : "k")
                 }
                 KeyButton {
                     label: "l"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "L" : "l")
                 }
                 KeyButton {
                     label: ";"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(";")
                 }
                 KeyButton {
                     label: "'"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("'")
                 }
                 KeyButton {
                     label: "Enter"
@@ -507,42 +608,62 @@ Window {
                 KeyButton {
                     label: "z"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "Z" : "z")
                 }
                 KeyButton {
                     label: "x"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "X" : "x")
                 }
                 KeyButton {
                     label: "c"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "C" : "c")
                 }
                 KeyButton {
                     label: "v"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "V" : "v")
                 }
                 KeyButton {
                     label: "b"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "B" : "b")
                 }
                 KeyButton {
                     label: "n"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "N" : "n")
                 }
                 KeyButton {
                     label: "m"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(mainWindow.capsLock ? "M" : "m")
                 }
                 KeyButton {
                     label: ","
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(",")
                 }
                 KeyButton {
                     label: "."
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey(".")
                 }
                 KeyButton {
                     label: "/"
                     isCapsLock: mainWindow.capsLock
+                    autoSend: false
+                    onKeyPressed: mainWindow.dispatchKey("/")
                 }
                 KeyButton {
                     label: "Shift"
@@ -560,13 +681,15 @@ Window {
                     label: "Ctrl"
                     width: (t.layout?.keyWidth ?? 72) * 1.25
                     autoSend: false
-                    onKeyPressed: KeyboardSimulator.sendKey("ctrl")
+                    isModifierActive: mainWindow.ctrlHeld
+                    onKeyPressed: mainWindow.ctrlHeld = !mainWindow.ctrlHeld
                 }
                 KeyButton {
                     label: "Alt"
                     width: (t.layout?.keyWidth ?? 72) * 1.25
                     autoSend: false
-                    onKeyPressed: KeyboardSimulator.sendKey("alt")
+                    isModifierActive: mainWindow.altHeld
+                    onKeyPressed: mainWindow.altHeld = !mainWindow.altHeld
                 }
                 KeyButton {
                     label: "Space"
@@ -579,13 +702,15 @@ Window {
                     label: "Alt"
                     width: (t.layout?.keyWidth ?? 72) * 1.25
                     autoSend: false
-                    onKeyPressed: KeyboardSimulator.sendKey("alt")
+                    isModifierActive: mainWindow.altHeld
+                    onKeyPressed: mainWindow.altHeld = !mainWindow.altHeld
                 }
                 KeyButton {
                     label: "Super"
                     width: (t.layout?.keyWidth ?? 72) * 1.25
                     autoSend: false
-                    onKeyPressed: KeyboardSimulator.sendKey("super")
+                    isModifierActive: mainWindow.superHeld
+                    onKeyPressed: mainWindow.superHeld = !mainWindow.superHeld
                 }
                 KeyButton {
                     label: "←"

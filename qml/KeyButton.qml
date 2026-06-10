@@ -9,6 +9,7 @@ Rectangle {
     property string label: ""
     property bool isCapsLock: false
     property bool isCapsActive: false
+    property bool isModifierActive: false
     property bool autoSend: true
     signal keyPressed
 
@@ -26,6 +27,8 @@ Rectangle {
     property real keyBorderWidth: theme.visual?.keyBorderWidth || 1
 
     property color baseColor: {
+        if (isModifierActive)
+            return theme.visual?.keyPressedColor || "#3a3a3a";
         if (isCapsActive)
             return theme.visual?.keyPressedColor || "#3a3a3a";
         return theme.visual?.keyColor || "#2b2b2b";
@@ -54,8 +57,8 @@ Rectangle {
         return baseColor;
     }
 
-    border.color: theme.visual?.borderColor || "#33ffffff"
-    border.width: keyBorderWidth
+    border.color: isModifierActive ? (theme.visual?.textColor || "#00e5a0") : (theme.visual?.borderColor || "#33ffffff")
+    border.width: isModifierActive ? Math.max(keyBorderWidth, 2) : keyBorderWidth
 
     Rectangle {
         id: shadowRect

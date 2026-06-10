@@ -25,6 +25,7 @@ public:
     Q_INVOKABLE void sendEscape();
     Q_INVOKABLE void sendDelete();
     Q_INVOKABLE void sendArrow(const QString &direction);
+    Q_INVOKABLE void sendChord(const QStringList &modifiers, const QString &key);
 
     Q_INVOKABLE void moveWindow(int x, int y);
     Q_INVOKABLE QPoint globalMouse() const;

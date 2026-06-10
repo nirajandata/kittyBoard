@@ -214,6 +214,56 @@ void KeyboardSimulator::sendArrow(const QString &direction)
         sendKeyCode(106);
 }
 
+void KeyboardSimulator::sendChord(const QStringList &modifiers, const QString &key)
+{
+    QString k = key;
+    bool needsShift = false;
+
+    auto shiftIt = shiftSymbolMap.find(key);
+    if (shiftIt != shiftSymbolMap.end()) {
+        k = shiftIt.value();
+        needsShift = true;
+    }
+
+    QString lower = k.toLower();
+
+    auto it = keyCodeMap.find(lower);
+    if (it == keyCodeMap.end()) {
+        qWarning() << "Unknown key for chord:" << key;
+        return;
+    }
+
+    int keyCode = it.value();
+
+    QStringList args = {"key"};
+
+    QList<int> modCodes;
+    for (const QString &mod : modifiers) {
+        QString m = mod.toLower();
+        if (keyCodeMap.contains(m)) {
+            int mc = keyCodeMap.value(m);
+            modCodes.append(mc);
+            args << QString("%1:1").arg(mc);
+        }
+    }
+
+    if (needsShift) {
+        int shift = keyCodeMap.value("shift");
+        if (!modCodes.contains(shift)) {
+            modCodes.append(shift);
+            args << QString("%1:1").arg(shift);
+        }
+    }
+
+    args << QString("%1:1").arg(keyCode);
+    args << QString("%1:0").arg(keyCode);
+
+    for (int i = modCodes.size() - 1; i >= 0; --i)
+        args << QString("%1:0").arg(modCodes[i]);
+
+    runYdotool(args);
+}
+
 void KeyboardSimulator::applySuggestion(const QString &word)
 {
     for (int i = 0; i < m_currentWordLength; ++i) {
